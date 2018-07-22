@@ -12,7 +12,7 @@ Before starting, think about the most common UI layout you've seen and ask yours
 
 In the next sections, we will work together to propose answers to all of them.
 
-## Section 1: What ReactJS is and what it is for
+## Introduction: web based development
 
 Before starting, let's do a quick recap of the foundational concepts of web development.
 
@@ -33,7 +33,7 @@ In this case:
 
 The amount of things that we can do in web applications, and the complexity of them, has grown over time. Fortunately, we can use JavaScript libraries to avoid reinventing the wheel and reduce the repetitive work. **React** and **TypeScript** are some of these libraries.
 
-### What is ReactJS?
+## Section 1: What ReactJS is and what it is for
 
 > **Note:** If you want to know more about ReactJS, go to the official [Getting Started](https://reactjs.org/docs/getting-started.html).
 
@@ -83,7 +83,7 @@ Let's figure out together what the above means by checking the following example
   > **State?** Every React Component could store its own local state in `this.state`. State is similar to props, but it is private and fully controlled by the component. **The state MUST NOT be modified directly**. Instead, you should always use `this.setState(newState)`, sending a new object as argument containing _only the keys of the state you want to change_ (it performs a merge). This is because every execution of this method will _potentially_ trigger a new execution of the `render()` method, redrawing the component. If you want to know more about state and lifecycle, see [here](https://reactjs.org/docs/state-and-lifecycle.html).
 
 1. Finally, open the **Questionnaire** example by clicking [here](https://codepen.io/nanovazquez/pen/ajBdXB).
-1. Notice that we are now handling the user interaction (+"events"_). If you've done this before in plain-JS, the idea is similar:
+1. Notice that the code shows how to handle user interaction (_"events"_) in a similar way plain JS code does it:
 
     1. All JSX elements expose a set of events (see all supported events [here](https://reactjs.org/docs/events.html#supported-events)).
     1. We can hook up to each event by attaching a function to it. By default, it will receive a [SyntheticEvent](https://reactjs.org/docs/events.html) object as the first argument, but [you can change this](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
@@ -198,13 +198,13 @@ In the following steps, we are going to install the Microsoft's [TypeScript Reac
 
 1. With the app running locally (if you have stopped it, run `npm start` in your terminal), modify the code by removing _line 17_ and save your changes. Note that:
 
-  * A compilation error is displayed immediately in the browser.
+    * A compilation error is displayed immediately in the browser.
 
-  ![](./assets/images/ts-browser-error.png)
+      ![](./assets/images/ts-browser-error.png)
 
-  * An error is displayed in your IDE.
+    * An error is displayed in your IDE.
 
-  ![](./assets/images/ts-ide-error.png)
+      ![](./assets/images/ts-ide-error.png)
 
 1. Fix the error by undoing what you did (the `</div>` closing tag was removed), save your changes and wait for the browser to refresh.
 1. Now, open the **src/index.tsx** file. This is the main entry point of the application. The two most important things you need to learn now are:
@@ -212,19 +212,19 @@ In the following steps, we are going to install the Microsoft's [TypeScript Reac
     * When the app starts, we mount the `<App />` component in the HTML element with ID `root`. This means that the first component to be rendered in the browser is `<App />`.
     * The app is being rendered in the browser via `ReactDOM.render()`, the same way we were doing it in the initial examples.
 
-    ```js
-    import * as React from 'react';
-    import * as ReactDOM from 'react-dom';
-    import App from './App';
-    import './index.css';
-    import registerServiceWorker from './registerServiceWorker';
+      ```js
+      import * as React from 'react';
+      import * as ReactDOM from 'react-dom';
+      import App from './App';
+      import './index.css';
+      import registerServiceWorker from './registerServiceWorker';
 
-    ReactDOM.render(
-      <App />,
-      document.getElementById('root') as HTMLElement
-    );
-    registerServiceWorker();
-    ```
+      ReactDOM.render(
+        <App />,
+        document.getElementById('root') as HTMLElement
+      );
+      registerServiceWorker();
+      ```
 
 1. Last, open the **public/index.html** folder. This is the HTML page that is being rendered in the browser. Notice that _line 28_ has a `<div>` element with `root` as id.
 
@@ -244,7 +244,7 @@ Now that we've covered the basics, let's add some logic to our apps:
 
 We are now going to add new logic to our app by creating new components. For this, we'll use and widely-known pattern for React applications: [Presentational and Container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
 
-This is a good top-down approach for small/middle-sized apps, as it proposes you to encapsulate all the logic and state in parent (_smart_) components and then use their children (_dumb_) to organize the presentational code. Parent and children are conected by sending functions as _props_ to the children.
+This is a good top-down approach for small/middle-sized apps, as it proposes you to encapsulate all the logic and state in parent (_smart_) components and use their children (_dumb_) to organize the presentational code. Then, you send functions as _props_ to the children to connect user interaction with your code.
 
 First of all, let's create the children:
 
@@ -356,7 +356,7 @@ And now, let's modify the parent to consume them properly:
     }
     ```
 
-This should render the following in the browser (you can execute the app by running `npm start` in your terminal):
+The code we've just added renders the following in the browser (you can execute the app by running `npm start` in your terminal):
 
 ![](./assets/images/create-ts-app-bienvenidos.png)
 
@@ -386,7 +386,7 @@ Now, let's try to get some items and display them using the `<AppItems />` compo
     import postsService from './services/postsService';
     ```
 
-1. Then, add a constructor in the `App` class to initialize the `items` _state_. Note that TypeScript will ask you to define the type of the _props_ and the _state_. To speed up things, we can use `any`, althought this is not recommended for most of the cases.
+1. Then, add a constructor in the `App` class to initialize the `items` _state_. Note that TypeScript will ask you to define the type of the _props_ and the _state_. To speed up things, we can use `any`, although for most of the cases it is not recommended.
 
     ```js
     class App extends React.Component<any, any> {
@@ -445,13 +445,13 @@ of the `<App />` component.
 
     > **Note:** For more information about this method and React components lifecycle, see [here](https://reactjs.org/docs/react-component.html#componentdidmount).
 
-1. Open the app in the browser by running `npm start` in the terminal and then navigating to http://localhost:3000/ , You should see something like this:
+1. Open the app in the browser by running `npm start` in the terminal and then navigating to http://localhost:3000/. You should see something like this:
 
     ![](./assets/images/create-ts-app-backend-data.png)
 
-We are almost there! Now the app retrieves data from the outside world, but our page looks really ugly. To improve this, replace the content of the **src/App.css** file with the contents of the **App.css** file located inside the assets folder of this exercise. Then, execute the app again and see the result.
+We are almost there! Now the app retrieves data from the outside world, but our page looks pretty awful. To improve this, replace the content of the **src/App.css** file with the contents of the **App.css** file located inside the assets folder of this exercise. Then, execute the app again and see the result.
 
-    ![](./assets/images/create-ts-app-backend-data-nicer.png)
+![](./assets/images/create-ts-app-backend-data-nicer.png)
 
 Way better, right? 🎉
 
