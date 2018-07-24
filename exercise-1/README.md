@@ -151,13 +151,15 @@ Now that we've covered the basics, It's time to make things real. In this sectio
 
 ### Initial setup
 
+> **Note:** You can skip the steps 1-5 and use the application located in the **begin** folder of this Exercise. Remember to use `npm install` before running it.
+
 For starters, we need a React web app that can run in our laptop. We've seen before that, since both TypeScript and JSX don't run in browsers (we need to transpile the code), there are several tools that we need to configure to code using these libraries but, in the end, get an artifact fully compatible with browsers. Luckily, there are tools in the React ecosystem that preconfigure everything for us. This way, we can **only** focus on our code.
 
 In the following steps, we are going to install the Microsoft's [TypeScript React Starter](https://github.com/Microsoft/TypeScript-React-Starter) app, that was created on top of Facebook's [Create React app](https://github.com/facebook/create-react-app).
 
 > **Note:** We'll cover how to configure the entire build process manually in a future Exercise.
 
-1. In your terminal, run `npx create-react-app my-app --scripts-version=react-scripts-ts`. This command will create a TypeScript application in the folder **my app**. Alternatively, you can use the application located in the **begin** folder of this Exercise.
+1. In your terminal, run `npx create-react-app my-app --scripts-version=react-scripts-ts`. This command will create a TypeScript application in the folder **my app**.
 
     > **Note:** If `npx` doesn't work you can use `npm i -g create-react-app` and then `create-react-app my-app --scripts-version=react-scripts-ts` and then `npm i`.
 
@@ -290,6 +292,7 @@ First of all, let's create the children:
     interface Item {
       id: number;
       title: string;
+      body: string;
     }
 
     interface IProps {
