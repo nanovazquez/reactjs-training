@@ -159,7 +159,7 @@ In the following steps, we are going to install the Microsoft's [TypeScript Reac
 
 1. In your terminal, run `npx create-react-app my-app --scripts-version=react-scripts-ts`. This command will create a TypeScript application in the folder **my app**. Alternatively, you can use the application located in the **begin** folder of this Exercise.
 
-    > **Note:** If `npx` doesn't work you can use `npm i -g create-react-app` and then `reate-react-app my-app --scripts-version=react-scripts-ts`.
+    > **Note:** If `npx` doesn't work you can use `npm i -g create-react-app` and then `create-react-app my-app --scripts-version=react-scripts-ts` and then `npm i`.
 
 1. Wait for the process to complete. You should see a message similar to this:
 
