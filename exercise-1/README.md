@@ -14,7 +14,7 @@ In the next sections, we will work together to propose answers to all of them.
 
 ## Introduction: web based development
 
-Before starting, let's do a quick recap of the foundational concepts of web development.
+Before starting, let's do a quick recap of the foundational concepts of web development. If you know about them, you can skip this part and jump directly to Section 1.
 
 * Web applications are, basically, applications that can be executed by a (web) browser (Chrome, Firefox, Edge, Safari, Internet Explorer, etc).
 * Web browser only understand HTML, JavaScript and CSS.
