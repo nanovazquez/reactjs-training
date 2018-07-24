@@ -62,7 +62,7 @@ Let's figure out together what the above means by checking the following example
 
     ![](./assets/images/view-compiled-js.png)
 
-1. Now, modify the examply by replacing the entire _JS (Babel)_ section with the following code (see the result [here](https://codepen.io/nanovazquez/pen/bjBBLG). Notice that we are merely moving the JSX output to a function, but we are now sending the message via _props_.
+1. Now, modify the examply by replacing the entire _JS_ section with the following code (see the result [here](https://codepen.io/nanovazquez/pen/bjBBLG). Notice that we are merely moving the JSX output to a function, but we are now sending the message via _props_.
 
     ```js
     const Hello = ({ message }) => (
@@ -70,15 +70,15 @@ Let's figure out together what the above means by checking the following example
     );
 
     ReactDOM.render(
-      <Hello message="Hello React!" />,
+      <Hello message="Hello React!!" />,
       document.getElementById('root')
     );
     ```
 
-    > **Props:** React functions can receive arbitrary, read-only input named _props_. These _props_, or simply arguments of the function, define what the function returns. For instance, in our previous example, the message we output is tied to the `message` property. **All React functions & components must act as pure functions with respect to their props.**. This means that the return of the function is only determined by its input values, without "side effects" (we'll see what a React component is later).
+    > **Props:** React functions can receive arbitrary, read-only input named _props_. These _props_, or simply arguments of the function, define what the function returns. For instance, in our previous example, the message we output is tied to the `message` property. **All React functions & components must act as pure functions with respect to their props**. This means that the return of the function is only determined by its input values, without "side effects" (we'll see what a React component is later).
 
 1. Let's switch to another example. Open the **React Timer** example by clicking [here](https://codepen.io/nanovazquez/pen/RBoabJ).
-1. The code is more complicated now, take a few minutes to analize it. Notice that we are declaring a `<Timer />` class that extends from `React.Component`, has a `constructor()` and four methods.
+1. The code looks more complicated now, take a few minutes to review it. Notice that we are declaring a `<Timer />` class that extends from `React.Component`, has a `constructor()` and four methods.
 
     > **React.Component?** React lets you define components as classes or functions. When you extend from _React.Component_, you need to define a **render()** method, responsible for returning the JSX elements that will be displayed in the browser. Additionally, you will be able to hook app to several [lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle) of the component, like `constructor()`, `componentWillMount()`, `componentWillUnmount()`, and execute your own code.
 
@@ -87,6 +87,7 @@ Let's figure out together what the above means by checking the following example
     > **State?** Every React Component could store its own local state in `this.state`. State is similar to props, but it is private and fully controlled by the component. **The state MUST NOT be modified directly**. Instead, you should always use `this.setState(newState)`, sending a new object as argument containing _only the keys of the state you want to change_ (it performs a merge). This is because every execution of this method will _potentially_ trigger a new execution of the `render()` method, redrawing the component. If you want to know more about state and lifecycle, see [here](https://reactjs.org/docs/state-and-lifecycle.html).
 
 1. Finally, open the **Questionnaire** example by clicking [here](https://codepen.io/nanovazquez/pen/ajBdXB).
+1. Take a few minutes to analize all the pieces of code involved, and the responsibility of each one of them. Play with the checkboxes and try to understand how we are rendering the results.
 1. Notice that the code shows how to handle user interaction (_"events"_) in a similar way plain JS code does it:
     - All JSX elements expose a set of events (see all supported events [here](https://reactjs.org/docs/events.html#supported-events)).
     - We can hook up to each event by attaching a function to it. By default, it will receive a [SyntheticEvent](https://reactjs.org/docs/events.html) object as the first argument, but [you can change this](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
