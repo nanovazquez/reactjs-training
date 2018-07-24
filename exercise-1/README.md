@@ -54,17 +54,19 @@ The way we split our layout into components is entirely arbitrary and, although 
 Let's figure out together what the above means by checking the following examples (from the ReactJS documentation):
 
 1. Open the **Hello React!** example by clicking [here](https://codepen.io/nanovazquez/pen/oMYboB).
-1. Notice that the code is using _JSX syntax_. Click the button at the right of the _JS (Babel)_ panel and then select _View Compiled JS_ to see the transpiled JavaScript code.
-
-    ![](./assets/images/view-compiled-js.png)
+1. Take a few minutes to analize the code. Notice that the code is using _JSX syntax_.
 
     > **What is JSX?** JSX is the de-facto syntax extension to render HTML elements in the React ecosystem. It's not HTML, but the syntax and support is pretty similar. It may remind you of a template language, but it also comes with the full power of JavaScript. If you want to learn more about JSX, see [here](https://reactjs.org/docs/introducing-jsx.html). **Browsers don't understand JSX**. To make our code work in browsers, we need another JS library to _transpile_ our code into JavaScript code that browsers can understand. Or, optionally, write the code that is shown in the compiled view (not recommended).
 
-1. Now, modify the examply by replacing the entire _JS (Babel)_ section with the following code (see the result [here](https://codepen.io/nanovazquez/pen/bjBBLG). Notice that we are merely moving the JSX output to a function.
+1. Click the button at the right of the _JS (Babel)_ panel and then select _View Compiled JS_ to see the transpiled JavaScript code. This is all JavaScript code that the browser understands.
+
+    ![](./assets/images/view-compiled-js.png)
+
+1. Now, modify the examply by replacing the entire _JS (Babel)_ section with the following code (see the result [here](https://codepen.io/nanovazquez/pen/bjBBLG). Notice that we are merely moving the JSX output to a function, but we are now sending the message via _props_.
 
     ```js
     const Hello = ({ message }) => (
-      <h1>{message}</hi>
+      <h1>{message}</h1>
     );
 
     ReactDOM.render(
@@ -75,10 +77,12 @@ Let's figure out together what the above means by checking the following example
 
     > **Props:** React functions can receive arbitrary, read-only input named _props_. These _props_, or simply arguments of the function, define what the function returns. For instance, in our previous example, the message we output is tied to the `message` property. **All React functions & components must act as pure functions with respect to their props.**. This means that the return of the function is only determined by its input values, without "side effects" (we'll see what a React component is later).
 
-1. Now, open the **React Timer** example by clicking [here](https://codepen.io/nanovazquez/pen/RBoabJ).
-1. Notice that now we are declaring a `<Timer />` class, that extends from `React.PureComponent`, defines its own state stored in `this.state` and updates it using `this.setState()`.
+1. Let's switch to another example. Open the **React Timer** example by clicking [here](https://codepen.io/nanovazquez/pen/RBoabJ).
+1. The code is more complicated now, take a few minutes to analize it. Notice that we are declaring a `<Timer />` class that extends from `React.Component`, has a `constructor()` and four methods.
 
-    > **React.PureComponent?** React lets you define components as classes or functions. When you extend from either _React.Component_ or _React.PureComponent_, you only need to define a **render()**, responsible for returning the JSX elements you want to display for that particular component. Additionally, you will be able to execute code by implementing any of the optional [lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle), like `constructor()`, `componentWillMount()`, `componentWillUnmount()`, etc.
+    > **React.Component?** React lets you define components as classes or functions. When you extend from _React.Component_, you need to define a **render()** method, responsible for returning the JSX elements that will be displayed in the browser. Additionally, you will be able to hook app to several [lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle) of the component, like `constructor()`, `componentWillMount()`, `componentWillUnmount()`, and execute your own code.
+
+1. Now, notice that the `tick()` method updates the component's state by calling `this.setState()`.
 
     > **State?** Every React Component could store its own local state in `this.state`. State is similar to props, but it is private and fully controlled by the component. **The state MUST NOT be modified directly**. Instead, you should always use `this.setState(newState)`, sending a new object as argument containing _only the keys of the state you want to change_ (it performs a merge). This is because every execution of this method will _potentially_ trigger a new execution of the `render()` method, redrawing the component. If you want to know more about state and lifecycle, see [here](https://reactjs.org/docs/state-and-lifecycle.html).
 
@@ -93,7 +97,7 @@ By reviewing these examples, we learned the following:
 
 1. React (usually) the **JSX** to define what we want to display.
 1. To customize what we output we can send **props** to our React functions or components.
-1. React provides the **React.PureComponent** class to help to encapsulate our code in components.
+1. React provides the **React.Component** class to help to encapsulate our code in components.
 1. Each React component could have its own **state** to store values locally.
 1. You can capture user interactions by hooking a function or class method to a JSX **events**.
 
@@ -101,7 +105,9 @@ By reviewing these examples, we learned the following:
 
 [TypeScript](https://www.typescriptlang.org/) is an open-source library developed and maintained by Microsoft to implement large-scale applications in JavaScript environments. It compiles to plain JavaScript, which runs on any browser, in Node.js, or in any JavaScript engine that supports [ECMAScript](https://en.wikipedia.org/wiki/ECMAScript) 3 (or newer).
 
-In essence, it's a strict syntactical superset of JavaScript that adds optional static typing to the language. The main benefits of using this library are:
+In essence, it's a strict syntactical superset of JavaScript that adds optional static typing to the language **at development time**.
+
+The main benefits of using this library are:
 
 * It has static checking and code refactoring and a broad set of highly-productive development tools and practices.
 * It lets you write code using the latest features and syntax, without worrying about the browser support (because it will compile to plain JS).
@@ -151,6 +157,9 @@ In the following steps, we are going to install the Microsoft's [TypeScript Reac
 > **Note:** We'll cover how to configure the entire build process manually in a future Exercise.
 
 1. In your terminal, run `npx create-react-app my-app --scripts-version=react-scripts-ts`. This command will create a TypeScript application in the folder **my app**. Alternatively, you can use the application located in the **begin** folder of this Exercise.
+
+    > **Note:** If `npx` doesn't work you can use `npm i -g create-react-app` and then `reate-react-app my-app --scripts-version=react-scripts-ts`.
+
 1. Wait for the process to complete. You should see a message similar to this:
 
     ![](./assets/images/create-ts-app.png)
@@ -237,7 +246,7 @@ In this quick walkthrough, we did the following:
 
 Do you remember what we talked about in the introduction? We said that **browsers only understand HTML, JS and CSS**. In this section, we've gone through the files that will output them. In the end, every compiled JS and CSS file will be injected in the **index.html** page, that will be rendered by the browser when users navigate to your page.
 
-Now that we've covered the basics, let's add some logic to our apps:
+Now that we've covered the basics, let's add some logic to our apps.
 
 ### How to add new components
 
