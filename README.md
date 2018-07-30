@@ -19,6 +19,7 @@ Participants should have installed:
 
 * [Node 8.x](https://nodejs.org/en/) or higher installed in your laptop.
 * [Visual Studio Code](https://code.visualstudio.com/).
+* [Redux devtools installed in your browser](https://github.com/zalmoxisus/redux-devtools-extension#installation).
 * A MuleSoft account with permissions to install packages from our NPM private registry. You can configure this by running the following script using the MuleSoft LDAP credentials (email and password) provided by the DevOps team: `npm login --registry=https://nexus3.build.msap.io/repository/npm-internal/ --scope=@mulesoft --verbose`.
 
 ## Exercises
