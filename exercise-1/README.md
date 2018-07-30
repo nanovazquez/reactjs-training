@@ -469,7 +469,7 @@ Way better, right? 🎉
 
 ### Wrapping up
 
-In this section we learned the following:
+In this section, we learned the following:
 
 * How to create new React components and export them for later use.
 * How to make calls to a backend service.
