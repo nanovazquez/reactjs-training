@@ -12,7 +12,7 @@ const dummyProducts = [
 ];
 
 function getUserShoppingCartItems(userId: string) {
-  return Promise.resolve(dummyProducts);
+  return Promise.resolve(dummyProducts.slice(0, 3));
 }
 
 export default {

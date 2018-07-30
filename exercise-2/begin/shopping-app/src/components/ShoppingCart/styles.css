@@ -35,3 +35,9 @@
   font-weight: bold;
   line-height: 1.25em;
 }
+
+.shopping-cart-item-remove {
+  cursor: pointer;
+  font-size: 14px;
+
+}

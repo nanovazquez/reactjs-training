@@ -11,6 +11,12 @@ class App extends React.Component<IProps, IState> {
     this.state = { shoppingCartItems: [] };
   }
 
+  public handleRemoveShoppingCartItem = (itemToRemoveId: string) => {
+    this.setState({
+      shoppingCartItems: this.state.shoppingCartItems.filter(item => item.id !== itemToRemoveId)
+    });
+  }
+
   public getPages() {
     const currentUrl = window.location.pathname;
 
@@ -37,7 +43,7 @@ class App extends React.Component<IProps, IState> {
     return (
       <div className="app">
        <TopBar pages={pages} itemsInCart={shoppingCartItems.length} />
-       <ShoppingCart items={shoppingCartItems} />
+       <ShoppingCart items={shoppingCartItems} onItemRemove={this.handleRemoveShoppingCartItem} />
       </div>
     );
   }
