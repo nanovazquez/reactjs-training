@@ -2,7 +2,7 @@
 
 In this exercise, we will review what we've done in the previous exercise and try to analyze together the limitations of the strategy used to handle state (Parent-Child components and component state). Then, we will propose another tactic best-suited for medium/large applications (Redux), and we'll try to study the tradeoffs of this new approach.
 
-## Section 1: A quick recap
+## Introduction: A quick recap
 
 > **Note:** for this exercise, you need [Redux devtools in your browser](https://github.com/zalmoxisus/redux-devtools-extension#installation). Follow the steps in the link and install it before continuing with this section.
 
@@ -48,7 +48,7 @@ Notice that this is just a simple example. You can imagine that a real-world app
 
 There should be a better way, right?
 
-## Section 2: State management
+## Section 1: Introducing Redux
 
 [Redux](https://redux.js.org/introduction/threeprinciples) is a simple library that proposes a very simple approach to manage your state. Although it introduces several new concepts, it can be described in three core concepts (that we already know about):
 
@@ -58,11 +58,11 @@ There should be a better way, right?
 
 ![](./assets/images/react-redux.png)
 
-In the following section, we will go through the steps needed to migrate from the local component state management to Redux. For this, we will use a simple shopping cart application.
-
 > **Note:** There is a lot to learn about Redux and this course could not cover everything. If you want to know more, we suggest that you should start from the [basics](https://redux.js.org/basics).
 
 ### The Shopping cart app
+
+We created a simple shopping cart application to demonstrate the basic concepts of state management and user interaction. This application uses everything we've learned so far, and the plan today is to take it to the next level with the help of Redux. But before doing that, let's do a quick review of the app:
 
 1. Open the _Shopping cart app_ located in the **begin/shopping-app** folder of this Exercise.
 1. In the terminal, and navigate to the root folder and run `npm i` to install all the dependencies.
@@ -79,10 +79,12 @@ In the following section, we will go through the steps needed to migrate from th
 
 Notice that the scenario proposed is similar to what we discussed before. To sum it up, if something changes in the `<ShoppingCart />` component, we will re-render everything (although, in this case, we need it). In the next step, we will install Redux and move some of the logic of the `<App />` component to somewhere else.
 
-### Migrating to Redux
+## Section 2: Migrating to Redux
+
+In this section, we will go through the steps needed to migrate from the local component state management to Redux. For this, we will use a simple shopping cart application.
 
 1. Let's start by installing the packages we need. We'll go through all of them later, for now, just run `npm i -S redux react-redux redux-actions redux-thunk-promise`.
-1. Ant their definition files: `npm i -D @types/redux @types/react-redux @types/redux-actions`.
+1. And their definition files: `npm i -D @types/redux @types/react-redux @types/redux-actions`.
 
     > **Note:** A definition file contains the types and declarations of a particular JS library that was not written in TypeScript. They are part of the [open-source project Definitely typed](https://github.com/DefinitelyTyped/DefinitelyTyped), maintained by the TS community that, as of today, has more than 4000 definition files.
 
@@ -92,9 +94,9 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
     * The current user ID
     * The user's shopping cart items.
 
-  Therefore, create a folder named **user** inside the **src/domain** folder.
+    Therefore, create a folder named **user** inside the **src/domain** folder.
 
-#### Actions and reducers
+### Actions and reducers
 
 1. We'll need to create some files to manage different responsibilities. We'll start by creating an **actions.ts** file for our app's actions creators. _What is an action creator?_ a function that returns/creates actions.
 
@@ -178,7 +180,7 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
 
     > **Note:** Did you notice that you are wrapping your user's reducers in the `user` property? This will be the state's node in which all the user information will go. Future state, like products or categories, would use different nodes. If you've followed this convention, you've probably noticed that you'll just only need to copy and paste the user's folder for that.
 
-#### Refactoring the App component
+### Refactoring the App component
 
 Next, we need to do some modifications to the `<App />` component. These changes will be mostly simplifications because we are moving the state management logic away from it.
 
@@ -270,7 +272,7 @@ Next, we need to do some modifications to the `<App />` component. These changes
     export default AppContainer;
     ```
 
-#### Configuring Redux
+### Configuring the Redux store
 
 The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
 
@@ -306,9 +308,9 @@ The last step of the puzzle is the setup of React with Redux and the rest. For t
     ```
     > **Note:** A [Provider](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store) is a container component that enables your presentational components to connect with the Redux store. It's the one that let's you receive both the `state` and `dispatch` in the `mapStateToProps()` and `mapDispatchToProps()` functions, respectively.
 
-And that's it! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Fun ..right?
+And the migration is complete! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Fun ..right?
 
-### Add another actions
+### Section 3: Add new actions to the app
 
 We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise. To do this, follow these steps:
 
@@ -379,7 +381,7 @@ We are now going to add two simple actions: a sync action to add shopping items 
     }, initialState);
     ```
 
-And that's it! We don't have yet the pages to perform this actions. But we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. For instance, if you dispatch this action, you will see a new item in your shopping cart.
+And that's it! Although we don't have the pages to perform these actions, we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. For instance, if you dispatch this action, you will see a new item in your shopping cart.
 
     ```js
     {
