@@ -94,6 +94,8 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
 
   Therefore, create a folder named **user** inside the **src/domain** folder.
 
+#### Actions and reducers
+
 1. We'll need to create some files to manage different responsibilities. We'll start by creating an **actions.ts** file for our app's actions creators. _What is an action creator?_ a function that returns/creates actions.
 
     Paste the following JS code inside the **src/domains/user/actions.ts** file. This code defines two actions, one sync and other async.
@@ -176,7 +178,9 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
 
     > **Note:** Did you notice that you are wrapping your user's reducers in the `user` property? This will be the state's node in which all the user information will go. Future state, like products or categories, would use different nodes. If you've followed this convention, you've probably noticed that you'll just only need to copy and paste the user's folder for that.
 
-Next, we need to do some modifications to the `<App />` component. These changes will be mostly refactoring/simplifications because we are moving the state management logic away from it.
+#### Refactoring the App component
+
+Next, we need to do some modifications to the `<App />` component. These changes will be mostly simplifications because we are moving the state management logic away from it.
 
 1. Open the **src/components/App/types.ts** file and replace the `IProps` and `IState` interfaces with the following code. Note that we are merging these two interfaces because we will receive everything via `props`, including the `actions`.
 
@@ -189,84 +193,84 @@ Next, we need to do some modifications to the `<App />` component. These changes
     }
     ```
 
-1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.ts** file. And apply the following changes to this file:
+1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.ts** file. And apply the following changes to this file.
 
-    1. First of all, replace the import of files with `import { IProps } from './types';`. Then update the class definition with `class App extends React.Component<IProps, {}>`.
-    1. Notice that we are not using state anymore. Remove the line in the `constructor()` that initializes it. It should now look like the following:
+1. First of all, replace the import of files with `import { IProps } from './types';`. Then update the class definition with `class App extends React.Component<IProps, {}>`.
+1. Notice that we are not using state anymore. Remove the line in the `constructor()` that initializes it. It should now look like the following:
 
-        ```js
-        class App extends React.Component<IProps, {}> {
-          constructor(props: any) {
-            super(props);
-          }
-          ...
-        }
-        ```
+    ```js
+    class App extends React.Component<IProps, {}> {
+      constructor(props: any) {
+        super(props);
+      }
+      ...
+    }
+    ```
 
-    1. Then, replace the `handleRemoveShoppingCartItem()` method with the following code that simply fires an `action`:
+1. Then, replace the `handleRemoveShoppingCartItem()` method with the following code that simply fires an `action`:
 
-        ```js
-        public handleRemoveShoppingCartItem = (itemToRemoveId: string) => {
-          const { onRemoveShoppingCartItem = (id: string) => id } = this.props;
-          onRemoveShoppingCartItem(itemToRemoveId);
-        }
-        ```
-    1. Repeat the same for the `componentDidMount()` method:
+    ```js
+    public handleRemoveShoppingCartItem = (itemToRemoveId: string) => {
+      const { onRemoveShoppingCartItem = (id: string) => id } = this.props;
+      onRemoveShoppingCartItem(itemToRemoveId);
+    }
+    ```
+1. Repeat the same for the `componentDidMount()` method:
 
-        ```js
-        public componentDidMount() {
-          const { userId, fetchUserShoppingCartItems = (id: string) => Promise.resolve([]) } = this.props;
-          fetchUserShoppingCartItems(userId);
-        }
-        ```
-    1. The last part is to update from where we get the shopping cart items in the `render()` method. You can do that by simply changing that we are getting the values from `props` instead of `state`.
+    ```js
+    public componentDidMount() {
+      const { userId, fetchUserShoppingCartItems = (id: string) => Promise.resolve([]) } = this.props;
+      fetchUserShoppingCartItems(userId);
+    }
+    ```
+1. The last part is to update from where we get the shopping cart items in the `render()` method. You can do that by simply changing that we are getting the values from `props` instead of `state`.
 
-        ```js
-          public render() {
-            const pages = this.getPages();
-            const { shoppingCartItems } = this.props;
+    ```js
+      public render() {
+        const pages = this.getPages();
+        const { shoppingCartItems } = this.props;
 
-            ...
-          }
-        ```
+        ...
+      }
+    ```
 
-We are almost there! Now we need to create the file that wraps this component and enhances it, using the Redux state information. For this create a new file named **src/components/App/App.container.ts** and paste the following code:
+1. We are almost there! Now we need to create the file that wraps this component and enhances it, using the Redux state information. For this create a new file named **src/components/App/App.container.ts** and paste the following code:
 
-```js
-import { connect } from 'react-redux';
-import { actions } from '../../domains';
-import App from './App';
+    ```js
+    import { connect } from 'react-redux';
+    import { actions } from '../../domains';
+    import App from './App';
 
-const mapStateToProps = (state: any) => ({
-  shoppingCartItems: state.user.shoppingCartItems,
-  userId: state.user.userId,
-});
+    const mapStateToProps = (state: any) => ({
+      shoppingCartItems: state.user.shoppingCartItems,
+      userId: state.user.userId,
+    });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  fetchUserShoppingCartItems: (userId: string) => dispatch(actions.fetchShoppingCartItems(userId)),
-  onRemoveShoppingCartItem: (itemId: string) => dispatch(actions.removeShoppingCartItem(itemId)),
-});
+    const mapDispatchToProps = (dispatch: any) => ({
+      fetchUserShoppingCartItems: (userId: string) => dispatch(actions.fetchShoppingCartItems(userId)),
+      onRemoveShoppingCartItem: (itemId: string) => dispatch(actions.removeShoppingCartItem(itemId)),
+    });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
-```
+    export default connect(mapStateToProps, mapDispatchToProps)(App);
+    ```
 
-Technically speaking, you created a container component. But ...isn't that what you have been doing? Yes and no. With Redux in place, the _container_ now is in charge of connecting your component to the state, by doing two separate (but yet simple) things:
+    Technically speaking, you created a container component. But ...isn't that what you have been doing? Yes and no. With Redux in place, the _container_ now is in charge of connecting your component to the state, by doing two separate (but yet simple) things:
 
-* Map the Redux state with the component's props.
-* Map the Redux actions with the component's props. And dispatch them when executed.
+    * Map the Redux state with the component's props.
+    * Map the Redux actions with the component's props. And dispatch them when executed.
 
-The rest is just sugar syntax to simplify the connection of your component with Redux.
+    The rest is just sugar syntax to simplify the connection of your component with Redux.
 
-> **Note:** Create container components by connecting them when it's convenient. Whenever you feel like you're duplicating code in parent components to provide data for same kinds of children, time to extract a container. Generally, as soon as you feel a parent knows too much about “personal” data or actions of its children, time to create a container.
+    > **Note:** Create container components by connecting them when it's convenient. Whenever you feel like you're duplicating code in parent components to provide data for same kinds of children, time to extract a container. Generally, as soon as you feel a parent knows too much about “personal” data or actions of its children, time to create a container.
 
-Before leaving the **App** folder, let's add an **src/components/App/index.ts** file to simplify the usage of this component from the outside. For this, paste the following code inside this newly created file:
+1. Before leaving the **App** folder, let's add an **src/components/App/index.ts** file to simplify the usage of this component from the outside. For this, paste the following code inside this newly created file:
 
-```js
-import AppContainer from './App.container';
-export default AppContainer;
-```
+    ```js
+    import AppContainer from './App.container';
+    export default AppContainer;
+    ```
 
-#### Now... the final configuration
+#### Configuring Redux
 
 The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
 
