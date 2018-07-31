@@ -6,9 +6,8 @@ export interface IProduct {
 }
 
 export interface IProps {
-  userId: string;
-}
-
-export interface IState {
   shoppingCartItems: IProduct[];
+  userId: string;
+  fetchUserShoppingCartItems: (userId: string) => Promise<IProduct[]>;
+  onRemoveShoppingCartItem: (itemId: string) => any;
 }

@@ -5,7 +5,11 @@
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts-ts": "2.16.0"
+    "react-redux": "^5.0.7",
+    "react-scripts-ts": "2.16.0",
+    "redux": "^4.0.0",
+    "redux-actions": "^2.6.1",
+    "redux-thunk-promise": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -18,6 +22,9 @@
     "@types/node": "^10.5.4",
     "@types/react": "^16.4.7",
     "@types/react-dom": "^16.0.6",
+    "@types/react-redux": "^6.0.5",
+    "@types/redux": "^3.6.0",
+    "@types/redux-actions": "^2.3.0",
     "typescript": "^2.9.2"
   }
 }
