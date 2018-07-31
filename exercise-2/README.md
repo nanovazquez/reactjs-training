@@ -197,7 +197,8 @@ Next, we need to do some modifications to the `<App />` component. These changes
 
 1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.ts** file. And apply the following changes to this file.
 
-1. First of all, replace the import of files with `import { IProps } from './types';`. Then update the class definition with `class App extends React.Component<IProps, {}>`.
+1. First of all, replace the import of types with `import { IProps } from './types';`.
+1. And update the class definition with `class App extends React.Component<IProps, {}>`.
 1. Notice that we are not using state anymore. Remove the line in the `constructor()` that initializes it. It should now look like the following:
 
     ```js
