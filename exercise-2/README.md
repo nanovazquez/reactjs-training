@@ -277,6 +277,7 @@ Next, we need to do some modifications to the `<App />` component. These changes
 
 The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
 
+1. Open the **src/index.tsx** file.
 1. Add the following `import` statements after the current ones. Most of them are from external libraries, but also notice that you are importing all the `reducers` of your application.
 
     ```js
