@@ -386,6 +386,17 @@ And that's it! We don't have yet the pages to perform this actions. But we could
 
 ![](./assets/images/dispatch-from-browser.gif)
 
+Take your time and play with the devtools. Notice, for instance, that now you can generate a new node in your state tree by dispatching the following action:
+
+    ```js
+    {
+      type: 'FETCH_ALL_ITEMS',
+      payload: [{ id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }]
+    }
+    ```
+
+    ![](./assets/images/redux-state-tree.png)
+
 🎉🎉
 
 ### Wrapping up
