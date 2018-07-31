@@ -1,4 +1,4 @@
-# State management and Navigation
+# State management
 
 In this exercise, we will review what we've done in the previous exercise and try to analyze together the limitations of the strategy used to handle state (Parent-Child components and component state). Then, we will propose another tactic best-suited for medium/large applications (Redux), and we'll try to study the tradeoffs of this new approach.
 
