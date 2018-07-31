@@ -401,7 +401,7 @@ Take your time and play with the devtools. Notice, for instance, that now you ca
     }
     ```
 
-    ![](./assets/images/redux-state-tree.png)
+![](./assets/images/redux-state-tree.png)
 
 🎉🎉
 
