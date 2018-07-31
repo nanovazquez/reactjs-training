@@ -195,7 +195,7 @@ Next, we need to do some modifications to the `<App />` component. These changes
     }
     ```
 
-1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.ts** file. And apply the following changes to this file.
+1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.tsx** file. And apply the following changes to this file.
 
 1. First of all, replace the import of types with `import { IProps } from './types';`.
 1. And update the class definition with `class App extends React.Component<IProps, {}>`.
