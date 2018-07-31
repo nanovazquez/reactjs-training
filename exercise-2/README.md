@@ -117,6 +117,11 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
 
 1. Next, we'll create the user's reducers. They are in charge of modeling our new app's state after receiving user action. Since we defined two actions, it makes sense to define two reducers. Paste the following code in a filed named **reducers.ts**, located inside the **src/domains/user** folder:
 
+    Note that:
+    * We define an initial state, similar to what we have in the `<App />` component.
+    * We don't mutate the state. Instead, we create a copy of it.
+    * We only change what we want to change. The rest remains the same.
+
     ```js
     import { handleActions } from 'redux-actions';
     import actions from './actions';
@@ -147,11 +152,6 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
     }, initialState);
     ```
 
-    Note that:
-    * We define an initial state, similar to what we have in the `<App />` component.
-    * We don't mutate the state. Instead, we create a copy of it.
-    * We only change what we want to change. The rest remains the same.
-
     > **Note:** Reducers specify how the application's state changes in response to actions sent to the store. Remember that actions only describe what happened, but don't model how the application's state changes. Find out more about them [here](https://redux.js.org/basics/reducers).
 
 1. Last, create an **index.ts** file inside the **src/domains** folder and paste the following code. This file wraps up everything we did to consume it easily from the outside.
@@ -173,6 +173,8 @@ Notice that the scenario proposed is similar to what we discussed before. To sum
       reducers,
     };
     ```
+
+    > **Note:** Did you notice that you are wrapping your user's reducers in the `user` property? This will be the state's node in which all the user information will go. Future state, like products or categories, would use different nodes. If you've followed this convention, you've probably noticed that you'll just only need to copy and paste the user's folder for that.
 
 Next, we need to do some modifications to the `<App />` component. These changes will be mostly refactoring/simplifications because we are moving the state management logic away from it.
 
@@ -264,14 +266,41 @@ import AppContainer from './App.container';
 export default AppContainer;
 ```
 
-#### One last step is missing
+#### Now... the final configuration
 
-The last step of the puzzle is the setup of React with Redux and the rest. We'll skip the details and will ask you to just replace the content of the **src/index.tsx** file with the content of the **index.tsx** file located in the **assets** folder of this Exercise.
+The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
 
-If you want to learn what's in this file, here are some links that might help:
-* [Configure your store](https://redux.js.org/recipes/configuringyourstore), with Redux devtools, middlewares, and your reducers
-* [Redux thunk promise](https://medium.com/@nanovazquez/redux-thunk-promise-thunk-and-fsa-compliant-promise-middleware-for-redux-fad10a941708), a middleware to perform FSA-compliant async actions.
-* [<Provider />](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store), a component that enables your presentational components to connect with the Redux store.
+1. Add the following `import` statements after the current ones. Most of them are from external libraries, but also notice that you are importing all the `reducers` of your application.
+
+    ```js
+    import { Provider } from 'react-redux';
+    import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+    import thunkPromiseMiddleware from 'redux-thunk-promise';
+    import { reducers } from './domains';
+    ```
+
+1. Next, create your store by passing your reducers and extend it with middlewares and developer tools
+
+    ```js
+    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const store = createStore(
+      combineReducers(reducers),
+      composeEnhancers(applyMiddleware(thunkPromiseMiddleware)),
+    );
+    ```
+    > **Note:** Middlewares extends the functionality of the Redux store, by executing custom code while an action is being dispatched. Redux does not support _async actions_ by default, and this is why we are enhancing it with [Redux thunk promise](https://medium.com/@nanovazquez/redux-thunk-promise-thunk-and-fsa-compliant-promise-middleware-for-redux-fad10a941708), a middleware to perform FSA-compliant async actions. If you want to know more about how to configure your store, Redux devtools and middlewares, see [here](https://redux.js.org/recipes/configuringyourstore).
+
+1. Finally, replace the current `ReactDOM.render` lines with the following:
+
+    ```js
+    ReactDOM.render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+      document.getElementById('root') as HTMLElement
+    );
+    ```
+    > **Note:** A [Provider](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store) is a container component that enables your presentational components to connect with the Redux store. It's the one that let's you receive both the `state` and `dispatch` in the `mapStateToProps()` and `mapDispatchToProps()` functions, respectively.
 
 And that's it! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Fun ..right?
 
@@ -355,7 +384,9 @@ And that's it! We don't have yet the pages to perform this actions. But we could
     }
     ```
 
-    ![](./assets/images/dispatch-from-browser.gif)
+![](./assets/images/dispatch-from-browser.gif)
+
+🎉🎉
 
 ### Wrapping up
 
