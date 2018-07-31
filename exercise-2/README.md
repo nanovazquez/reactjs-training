@@ -1,8 +1,8 @@
 # State management and Navigation
 
-In this exercise, we will review what we've done in the previous exercise and try to analyze together the limitations of the strategy used to handle state (Parent-Child components and component state). Then, we will propose another tactic best-suited for medium/large applications (Redux), and we'll try to study the tradeoffs of this new approach. Finally, we will add a new functionality all real-world apps have, navigation, and we'll see how easy is to integrate this feature with the new approach for handling state.
+In this exercise, we will review what we've done in the previous exercise and try to analyze together the limitations of the strategy used to handle state (Parent-Child components and component state). Then, we will propose another tactic best-suited for medium/large applications (Redux), and we'll try to study the tradeoffs of this new approach.
 
-## Introduction // A quick recap
+## Section 1: A quick recap
 
 > **Note:** for this exercise, you need [Redux devtools in your browser](https://github.com/zalmoxisus/redux-devtools-extension#installation). Follow the steps in the link and install it before continuing with this section.
 
@@ -48,7 +48,7 @@ Notice that this is just a simple example. You can imagine that a real-world app
 
 There should be a better way, right?
 
-## Section 1: State management
+## Section 2: State management
 
 [Redux](https://redux.js.org/introduction/threeprinciples) is a simple library that proposes a very simple approach to manage your state. Although it introduces several new concepts, it can be described in three core concepts (that we already know about):
 
@@ -264,9 +264,9 @@ import AppContainer from './App.container';
 export default AppContainer;
 ```
 
-#### One last step is missing :D
+#### One last step is missing
 
-The last step of the puzzle is the setup of React with Redux and the rest. We'll skip the details and will ask you to simply replace the content of the **src/index.tsx** file with the content of the **index.tsx** file located in the **assets** folder of this Exercise.
+The last step of the puzzle is the setup of React with Redux and the rest. We'll skip the details and will ask you to just replace the content of the **src/index.tsx** file with the content of the **index.tsx** file located in the **assets** folder of this Exercise.
 
 If you want to learn what's in this file, here are some links that might help:
 * [Configure your store](https://redux.js.org/recipes/configuringyourstore), with Redux devtools, middlewares, and your reducers
@@ -275,34 +275,93 @@ If you want to learn what's in this file, here are some links that might help:
 
 And that's it! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Fun ..right?
 
-### Add another action
+### Add another actions
 
-TBC: add async action (addItemToCart) and fire it using redux (we'll implement)
+We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise. To do this, follow these steps:
+
+1. Open the **src/services/users-service.ts** file and add the following method to return all items. And don't forget also to export it.
+
+    ```js
+    const dummyProducts = [
+      ...
+    ];
+    ...
+
+    function getAllItemsByUser(userId: string) {
+      return Promise.resolve(dummyProducts);
+    }
+
+    export default {
+      getAllItemsByUser,
+      getUserShoppingCartItems,
+    }
+    ```
+
+1. Next, open the **src/domains/user/actions.ts** and add the new action types. As before, don't forget to export everything:
+
+    ```js
+    ...
+    const ADD_SHOPPING_CART_ITEM = 'ADD_SHOPPING_CART_ITEM';
+    const FETCH_ALL_ITEMS = 'FETCH_ALL_ITEMS';
+
+    export default {
+      ADD_SHOPPING_CART_ITEM,
+      FETCH_ALL_ITEMS,
+      ...
+      addShoppingCartItem: createAction(ADD_SHOPPING_CART_ITEM),
+      fetchAllItems: createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getAllItemsByUser),
+      ...
+    };
+    ```
+
+1. Now it's the turn of the reducer. Add the new logic showed below in the **src/domains/user/reducers.ts** file. Notice that we will update the initial state as well.
+
+    ```js
+    ...
+
+    const initialState = {
+      allItems: [],
+      shoppingCartItems: [],
+      userId: 'user-id',
+    };
+
+    export default handleActions({
+      [actions.ADD_SHOPPING_CART_ITEM]: (state: any, action: any) => {
+        const newItem = action.payload;
+        return {
+          ...state,
+          shoppingCartItems: [].concat(...state.shoppingCartItems, newItem)
+        };
+      },
+
+      [actions.FETCH_ALL_ITEMS]: (state: any, action: any) => {
+        const items = action.payload;
+        return {
+          ...state,
+          allItems: items,
+        };
+      },
+
+      ...
+    }, initialState);
+    ```
+
+And that's it! We don't have yet the pages to perform this actions. But we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. For instance, if you dispatch this action, you will see a new item in your shopping cart.
+
+    ```js
+    {
+      type: 'ADD_SHOPPING_CART_ITEM',
+      payload: { id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }
+    }
+    ```
+
+    ![](./assets/images/dispatch-from-browser.gif)
 
 ### Wrapping up
 
 In this section, we learned the following:
 
-* A
-* B
-* C
-
-## Section 2: Navigation
-
-### Add new pages to the app
-
-TBC: add home page with option to add items to cart and display all items in cart
-
-### Create a routing mechanism
-
-TBC: add routing
-
-### Test the app!
-
-### Wrapping up
-
-In this section, we learned the following:
-
-* A
-* B
-* C
+* How to migrate from the local component state to Redux, by creating `actions` and `reducers`.
+* How to connect the Redux store with our components, through containers.
+* How to create new sync and async actions.
+* How to configure a Redux store in an app.

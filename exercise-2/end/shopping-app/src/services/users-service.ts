@@ -15,6 +15,11 @@ function getUserShoppingCartItems(userId: string) {
   return Promise.resolve(dummyProducts.slice(0, 3));
 }
 
+function getAllItemsByUser(userId: string) {
+  return Promise.resolve(dummyProducts);
+}
+
 export default {
+  getAllItemsByUser,
   getUserShoppingCartItems,
 }
