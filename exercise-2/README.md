@@ -89,12 +89,9 @@ In this section, we will go through the steps needed to migrate from the local c
     > **Note:** A definition file contains the types and declarations of a particular JS library that was not written in TypeScript. They are part of the [open-source project Definitely typed](https://github.com/DefinitelyTyped/DefinitelyTyped), maintained by the TS community that, as of today, has more than 4000 definition files.
 
 1. Now, create a folder named **domains** inside the **src** folder. We'll save all of our _data-domain related_ files there.
-1. Currently, we only have one domain, _user_. In this data-domain, we need to store:
+1. Currently, we only need to store the current user ID and the user shopping cart items. For this, create a folder named **user** inside the **src/domain** folder. We will create **actions** and **reducers** that will take care of updating the user information based on UI interaction.
 
-    * The current user ID
-    * The user's shopping cart items.
-
-    Therefore, create a folder named **user** inside the **src/domain** folder.
+![](./assets/images/redux-simplified.png)
 
 ### Actions and reducers
 
@@ -310,11 +307,15 @@ The last step of the puzzle is the setup of React with Redux and the rest. For t
     ```
     > **Note:** A [Provider](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store) is a container component that enables your presentational components to connect with the Redux store. It's the one that let's you receive both the `state` and `dispatch` in the `mapStateToProps()` and `mapDispatchToProps()` functions, respectively.
 
-And the migration is complete! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Fun ..right?
+And the migration is complete! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Take a few minutes to analyze what you did, you could use the diagram below to understand how data flows in a Redux-powered application.
+
+![](./assets/images/redux-data-flow.png)
 
 ### Section 3: Add new actions to the app
 
-We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise. To do this, follow these steps:
+We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise.
+
+To do this, follow these steps:
 
 1. Open the **src/services/users-service.ts** file and add the following method to return all items. And don't forget also to export it.
 
@@ -383,26 +384,28 @@ We are now going to add two simple actions: a sync action to add shopping items 
     }, initialState);
     ```
 
-And that's it! Although we don't have the pages to perform these actions, we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. For instance, if you dispatch this action, you will see a new item in your shopping cart.
+And that's it! Although we don't have the pages to perform these actions, we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. If you dispatch this action, you will see a new item in your shopping cart.
 
-    ```js
-    {
-      type: 'ADD_SHOPPING_CART_ITEM',
-      payload: { id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }
-    }
-    ```
+```js
+{
+  type: 'ADD_SHOPPING_CART_ITEM',
+  payload: { id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }
+}
+```
 
+#### Result
 ![](./assets/images/dispatch-from-browser.gif)
 
-Take your time and play with the devtools. Notice, for instance, that now you can generate a new node in your state tree by dispatching the following action:
+You can also generate a new node to store all the items your Shopping app could have by dispatching the following action:
 
-    ```js
-    {
-      type: 'FETCH_ALL_ITEMS',
-      payload: [{ id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }]
-    }
-    ```
+```js
+{
+  type: 'FETCH_ALL_ITEMS',
+  payload: [{ id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }]
+}
+```
 
+#### Result
 ![](./assets/images/redux-state-tree.png)
 
 🎉🎉
@@ -415,3 +418,4 @@ In this section, we learned the following:
 * How to connect the Redux store with our components, through containers.
 * How to create new sync and async actions.
 * How to configure a Redux store in an app.
+* How to trigger new actions to the store.
