@@ -6,7 +6,6 @@ export interface IProduct {
 }
 
 export interface IProps {
-  userId: string;
   pathname: string;
   shoppingCartItems: IProduct[];
 }

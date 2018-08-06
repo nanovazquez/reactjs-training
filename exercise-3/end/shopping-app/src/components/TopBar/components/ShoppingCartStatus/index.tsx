@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './styles.css';
 import { IProps } from './types';
 
-class ShoppingCartStatus extends React.PureComponent<IProps, {}> {
+class ShoppingCartStatus extends React.PureComponent<IProps> {
   public render() {
     const { itemsInCart } = this.props;
     return (

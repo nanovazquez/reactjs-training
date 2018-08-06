@@ -4,7 +4,7 @@ import logo from './logo.png';
 import './styles.css';
 import { IProps } from './types';
 
-class Breadcrumbs extends React.PureComponent<IProps, {}> {
+class Breadcrumbs extends React.PureComponent<IProps> {
   public renderPageLinks() {
     const { pages } = this.props;
 

@@ -5,8 +5,7 @@ import { IProps } from './types';
 class Home extends React.PureComponent<IProps> {
 
   public componentDidMount() {
-    const { fetchProducts } = this.props;
-    const { products } = this.props;
+    const { products, fetchProducts } = this.props;
 
     if (!products) {
       fetchProducts();

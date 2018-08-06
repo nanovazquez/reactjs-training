@@ -3,7 +3,6 @@ import actions from './actions';
 
 const initialState = {
   shoppingCartItems: [],
-  userId: undefined,
   errorMessage: undefined,
 };
 
