@@ -146,7 +146,7 @@ We are now going to improve our current app's state by adding a new node to stor
 
 With this in place, we are now ready to display these products on the Home page.
 
-### Adding a Home page
+## Section 2: Adding a Home page
 
 ![](./assets/images/home-page.png)
 
@@ -310,7 +310,7 @@ With this in place, we are now ready to display these products on the Home page.
 
 We have now all the pieces connected and ready to be used. But we only have a single entry point. The question that arises is, how can we let users see the _Home_ page and the _Shopping Cart_ page in our app? The answer is simple, **we need to implement navigation**.
 
-## Section 2: Create a navigation/routing mechanism in our app
+## Section 3: Create a navigation/routing mechanism in our app
 
 Navigation is a standard feature that all applications have. The usual approach to enable this is to configure a service that maps a particular page with a specific URL, a mechanism known as _routing_.
 
@@ -547,7 +547,7 @@ In this section, we learned the following:
 * How to set up React Router in an application.
 * How to configure the routing mechanism in an app and add links to navigate between pages.
 
-## Section 3: Checkpoint
+## Checkpoint
 
 In this section, we will review the concepts we learned so far, just in case there is something we need to analyze. Just to shake things up, we are going to use the real code, instead of the libraries we were using before.
 
