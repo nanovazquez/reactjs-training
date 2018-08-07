@@ -146,7 +146,7 @@ We are now going to improve our current app's state by adding a new node to stor
 
 With this in place, we are now ready to display these products on the Home page.
 
-## Section 2: Adding a Home page
+## Section 2: Create a Home page to display products
 
 ![](./assets/images/home-page.png)
 
