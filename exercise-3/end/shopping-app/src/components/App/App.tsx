@@ -33,7 +33,7 @@ class App extends React.Component<IProps, {}> {
        <TopBar pages={pages} itemsInCart={shoppingCartItems.length} />
        <Switch>
           <Route exact={true} path="/" component={Home} />
-          <Route component={ShoppingCart} />
+          <Route path="/shopping-cart" component={ShoppingCart} />
         </Switch>
       </div>
     );

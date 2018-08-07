@@ -27,7 +27,7 @@ Just as a quick recap, this is what we implemented in the previous exercise:
 
 We are now going to improve our current app's state by adding a new node to store product items. This will let us store information to select items from the initial page of our app (the typical Home page) to the user's shopping cart. In terms of the Redux state tree, this is what we are going to do:
 
-![](./assets/redux-state-tree.png)
+![](./assets/images/redux-state-tree.png)
 
 1. Create a new folder named **products** under the **src/domains** folder. We are going to create the _actions_ and _reducers_ of this state's node.
 1. **Implement the Products actions:** In the _products_ folder, create a new file named **actions.ts** and paste the following code:
@@ -44,7 +44,7 @@ We are now going to improve our current app's state by adding a new node to stor
     };
     ```
 
-    > **What are we doing?** We are defining a new action creator named `fetchProducts()` that will return actions of type `FETCH_PRODUCTS`. These actions will execute the `productsService.getAll()` method and will return its result as the payload of a new object, following the [Flux Standard Action](https://github.com/redux-utilities/flux-standard-action) standard.
+    > **Note:** What are we doing? We are defining a new action creator named `fetchProducts()` that will return actions of type `FETCH_PRODUCTS`. These actions will execute the `productsService.getAll()` method and will return its result as the payload of a new object, following the [Flux Standard Action](https://github.com/redux-utilities/flux-standard-action) standard.
 
     If you want to know more about _action creators_, see [here](https://redux.js.org/basics/actions#action-creators).
 
@@ -147,6 +147,8 @@ We are now going to improve our current app's state by adding a new node to stor
 With this in place, we are now ready to display these products on the Home page.
 
 ### Adding a Home page
+
+![](./assets/images/home-page.png)
 
 1. Navigate to the **Home** folder under **src/components**. As our first step, create the **types.ts** file and define the contract of the component we are about to create:
 
@@ -277,7 +279,7 @@ With this in place, we are now ready to display these products on the Home page.
     });
     ```
 
-    > **What are we doing here?** This is pure ES6 code, the latest version of JavaScript. We are simply creating two functions that will receive some information as arguments and return an object as response. For instance, the first function is equivalent to this JS code, that.
+    > **Note:** What are we doing here? This is pure ES6 code, the latest version of JavaScript. We are simply creating two functions that will receive some information as arguments and return an object as response. For instance, the first function is equivalent to this JS code, that.
 
         ```js
         var mapStateToProps = function (state) {
@@ -314,7 +316,7 @@ Navigation is a standard feature that all applications have. The usual approach 
 
 There are several approaches out there, but the most widely used in React is [React Router](https://github.com/ReactTraining/react-router). It's current version, v4, proposes a modern way to manage this. Leveraging the _everything is a component_ logic that React proposes, it suggests the creation of components (`<Router />`, `<Route />`, `<Switch />`, `<Link />`, etc.) to encapsulate specific pieces of this mechanism.
 
-![](./react-router.png)
+![](./assets/images/react-router.png)
 
 Let's see how this works by adding it into our app.
 
@@ -442,14 +444,14 @@ React Router proposes that you define the Routes in the rendering phase, decidin
         <TopBar pages={pages} itemsInCart={shoppingCartItems.length} />
         <Switch>
             <Route exact={true} path="/" component={Home} />
-            <Route component={ShoppingCart} />
+            <Route path="/shopping-cart" component={ShoppingCart} />
           </Switch>
         </div>
       );
     }
     ```
 
-    > **What are we doing here?** We are setting up the main route configuration of our app. In this case, we are saying that we will render the `<Home />` component if the URL is exactly `/` and the `<ShoppingCart />` component otherwise.
+    > **Note:** What are we doing here? We are setting up the main route configuration of our app. In this case, we are saying that we will render the `<Home />` component if the URL is exactly `/` and the `<ShoppingCart />` component if the URL is `/shopping-cart`.
 
     This configuration can also be applied in other sub-components, splitting your routing mechanism into several pieces. It is indeed a powerful mechanism.
 
