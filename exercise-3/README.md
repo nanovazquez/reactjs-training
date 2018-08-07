@@ -71,6 +71,8 @@ We are now going to improve our current app's state by adding a new node to stor
 1. The next step is to identify the actions we want this reducer to handle and implement the function in charge of this. We already know that we need to update the state when we fetch new products from the server, let's implement the function for this. Paste the following code inside the `handleActions()` first argument (the object)
 
     ```js
+    import actions from './actions';
+
     export default handleActions({
 
       [actions.FETCH_PRODUCTS]: (state: any, action: any) => {
