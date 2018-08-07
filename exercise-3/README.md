@@ -4,23 +4,32 @@ In this exercise, we will add new functionality that all real-world applications
 
 We'll end up with a fully-functional application powered with Redux and React Router.
 
-## Introduction: recap
-
-Talk about past app, current state and how it maps with the pages.
-Talk about missing functionality.
-Talk about navigation in human words.
-
 ## Section 1: Add a new state node for Products
 
 1. Open the terminal and navigate to the **exercise-3/begin/shopping-app** folder.
 1. In this folder, run `npm i` to install all the dependencies of the application.
-1. Run the app using `npm start`.
+1. Run the app using `npm start` to see something like this.
 
     ![](./assets/images/begin-app.png)
 
+Although it looks like an empty app, remember that we've already implemented:
+
+* A Redux store to manage the state of the application.
+* A **User** data domain to store user information, like the user shopping cart.
+* An `<App />` container component that connects the Redux store with the rest of the components.
+* A `<ShoppingCart />` and a `<Topbar />` component.
+
+Just as a quick recap, this is what we implemented in the previous exercise:
+
+![](../exercise-2/assets/images/redux-data-flow.png)
+
 ### Adding a new state node to store Products
 
-1. Now, create a new folder named **products** under the **src/domains** folder. We are going to create the _actions_ and _reducers_ of this state's node.
+We are now going to improve our current app's state by adding a new node to store product items. This will let us store information to select items from the initial page of our app (the typical Home page) to the user's shopping cart. In terms of the Redux state tree, this is what we are going to do:
+
+![](./assets/redux-state-tree.png)
+
+1. Create a new folder named **products** under the **src/domains** folder. We are going to create the _actions_ and _reducers_ of this state's node.
 1. **Implement the Products actions:** In the _products_ folder, create a new file named **actions.ts** and paste the following code:
 
     ```js
@@ -303,7 +312,11 @@ We have now all the pieces connected and ready to be used. But we only have a si
 
 Navigation is a standard feature that all applications have. The usual approach to enable this is to configure a service that maps a particular page with a specific URL, a mechanism known as _routing_.
 
-There are several approaches out there, but the most widely used in React is [React Router](https://github.com/ReactTraining/react-router). It's current version, v4, proposes a modern way to manage this. Leveraging the _everything is a component_ logic that React proposes, it suggests the creation of components (`<Router />`, `<Route />`, `<Switch />`, `<Link />`, etc.) to encapsulate specific pieces of this mechanism. Let's see how this works.
+There are several approaches out there, but the most widely used in React is [React Router](https://github.com/ReactTraining/react-router). It's current version, v4, proposes a modern way to manage this. Leveraging the _everything is a component_ logic that React proposes, it suggests the creation of components (`<Router />`, `<Route />`, `<Switch />`, `<Link />`, etc.) to encapsulate specific pieces of this mechanism.
+
+![](./react-router.png)
+
+Let's see how this works by adding it into our app.
 
 ### Setting up React Router
 
@@ -521,7 +534,7 @@ If you followed the steps to the letter, by following these steps you should see
 1. Then, click the icon at the top right to see the status of the current cart.
 1. Last, click the breadcrumbs to navigate to the previous page, or click the browser's back button.
 
-![](./assets/images/result.png)
+![](./assets/images/result.gif)
 
 🎉🎉🎉
 
