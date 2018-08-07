@@ -427,12 +427,14 @@ React Router proposes that you define the Routes in the rendering phase, decidin
 
     ```js
     import { Route, Switch } from 'react-router';
+    import Home from '../Home';
     ```
 
     We are going to use two React components to create our routing mechanism:
 
     * The `<Route />` component is the one in charge of rendering another component (a UI, a page, etc.) when a location matches the route’s path. You can learn more about it [here](https://reacttraining.com/react-router/web/api/Route).
     * The `<Switch />` component is used to render the first `<Route>` or `<Redirect>` that matches the location, very useful when you want to render only one component of the list. You can learn more about it [here](https://reacttraining.com/react-router/web/api/Switch).
+    * Last, we are importing the `<Home />` component to render it later.
 
 1. Now, update what the `render()` method returns with the following code:
 
@@ -498,7 +500,7 @@ You can also use React Router to add links to navigate between pages, without fo
     import { Link } from 'react-router-dom';
     ```
 
-1. Replace the `<a>` element with the `<Link />` component. Don't forget to replace the `href` attribute with a `to` attribute.
+1. Replace the `<div>` element with the `<Link />` component. Don't forget to add the `to` attribute and maintain the `className`.
 
     ```js
     class ShoppingCartStatus extends React.PureComponent<IProps> {
