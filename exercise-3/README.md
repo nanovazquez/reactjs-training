@@ -538,8 +538,6 @@ If you followed the steps to the letter, by following these steps you should see
 
 ![](./assets/images/result.gif)
 
-🎉🎉🎉
-
 ### Wrapping up
 
 In this section, we learned the following:
@@ -548,3 +546,120 @@ In this section, we learned the following:
 * How to react to actions triggered to update these nodes from different reducers.
 * How to set up React Router in an application.
 * How to configure the routing mechanism in an app and add links to navigate between pages.
+
+## Section 3: Checkpoint
+
+In this section, we will review the concepts we learned so far, just in case there is something we need to analyze. Just to shake things up, we are going to use the real code, instead of the libraries we were using before.
+
+### React components
+
+* What is a functional component?
+
+    ```js
+    function Welcome(props) {
+      return <h1>Hello, {props.name}</h1>;
+    }
+    ```
+
+* What is a class component?
+
+    ```js
+    class Welcome extends React.PureComponent {
+      render() {
+        return <h1>Hello, {this.props.name}</h1>;
+      }
+    }
+    ```
+
+### Props and state
+
+* What are props? How can you use them?
+
+    ```js
+    <Welcome name="Nano" />
+    ```
+
+* What is state? How can you update your component when it changes?
+
+    ```js
+    class ShoppingCart extends React.PureComponent {
+      constructor(props) {
+        super(props);
+        this.state = { items: [] };
+      }
+
+      componentDidMount() {
+        const { fetchUsername } = this.props;
+        fetchShoppingCartItems()
+          .then(items => this.setState({ items }));
+      }
+
+      render() {
+        const { items } = this.state;
+        return <p>You have {items.length} in your cart</p>;
+      }
+    }
+    ```
+
+### Redux
+
+* What is an action creator? What does it return?
+
+    ```js
+    const ADD_PRODUCT = 'ADD_PRODUCT';
+
+    export function addProduct(product) {
+      return { type: ADD_PRODUCT, product };
+    }
+    ```
+
+* What is a reducer? What is its responsibility?
+
+    ```js
+    const initialState = { products: [] };
+    export function productReducer(state = initialState, action) {
+      switch (action.type) {
+        case ADD_PRODUCT:
+          const newProduct = action.payload;
+          return [].concat(state.products, newProduct);
+        default:
+          return state;
+      }
+    }
+    ```
+
+* How you can connect the actions and reducers with a component?
+
+    ```js
+    const mapStateToProps = (state) => ({
+      products: state.products,
+    });
+
+    const mapDispatchToProps = (dispatch) => ({
+      addProduct: (product) => dispatch(actions.addProduct(product)),
+    });
+    ```
+
+### React Router
+
+* How can you split your app into different pages? What are we doing here?
+
+    ```js
+    export default  () => (
+      <Router>
+        <div>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/topics">Topics</Link></li>
+          </ul>
+          <Route exact path="/" component={Home}/>
+          <Route path="/about" component={About}/>
+          <Route path="/topics" component={Topics}/>
+        </div>
+      </Router>
+    );
+    ```
+
+🎉🎉🎉
+
