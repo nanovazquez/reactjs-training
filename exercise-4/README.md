@@ -21,6 +21,8 @@ Our app is already configured with [TSLint](https://palantir.github.io/tslint/),
 
 As you've seen in the previous exercises, VSCode and most of the IDEs already know how to run it. Let's create a script to run these checks in our CI/CD pipeline:
 
+1. Navigate to the project located in the **begin** folder of this exercise.
+1. Run `npm i` to install all its dependencies.
 1. Open the **package.json** file and find the **scripts** property.
 1. Paste the following line to a new script named **lint**. Save the file.
 
@@ -38,7 +40,7 @@ As you've seen in the previous exercises, VSCode and most of the IDEs already kn
 Of course, to understand the full power of this tool, we need to generate a few errors.
 
 1. Open the **src/Home/Home.tsx** file.
-1. In line 15, rename the `handleItemsClick` method to `handleItemsClicks`. Notice that an error is present in line 33.
+1. In line 15, rename the `handleItemClick` method to `handleItemClicks`. Notice that an error is present in line 33.
 1. Now, execute `npm run lint`. You should see an error like the following:
 
     ![](./assets/images/lint-errors.png)
