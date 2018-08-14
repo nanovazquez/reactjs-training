@@ -2,7 +2,14 @@
 
 # ReactJS Training
 
-This training is intended to introduce web development using the ReactJS ecosystem to any developer.
+This training is intended to introduce web development using the ReactJS ecosystem to any developer. It consists of different exercises:
+
+* Exercise 1: Introduction to React with TypeScript and its ecosystem
+* Exercise 2: State management
+* Exercise 3: Navigation
+* Exercise 4: Everything you need to know to go to PROD
+
+You can find the slides that introduce the exercises of this training [here](https://docs.google.com/presentation/d/1iB-UDYZbJEOfXmJJ3kj-EklgE_rDcAo-eVZO7fFVcN8/edit#slide=id.g3ec7f0c99c_0_9).
 
 ### Key takeaways:
 
