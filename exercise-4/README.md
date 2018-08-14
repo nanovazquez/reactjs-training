@@ -430,4 +430,143 @@ This is the approach we were using in the exercises.
 > **Note:** For more information, see [React file structure](https://reactjs.org/docs/faq-structure.html) and [Redux code structure](https://www.google.com.ar/search?q=redux+file+structure&oq=redux+file+struc&aqs=chrome.0.0j69i57j0l4.2279j0j4&sourceid=chrome&ie=UTF-8) documentation.
 
 
+### Redux and data management
+
+Redux suggests the use of two techiques to manipulate data:
+
+#### Normalize data
+
+Instead of storing something like this:
+
+```js
+const blogPosts = [{
+  id: "post1",
+  author: { username : "user1", name : "User 1" },
+  body: "......",
+  comments: [{
+    id: "comment1",
+    author: { username : "user2", name : "User 2" },
+    comment: ".....",
+  }, {
+    id: "comment2",
+    author: { username : "user3", name : "User 3" },
+    comment: ".....",
+  }
+  ]}, {
+  id: "post2",
+    ...
+```
+
+It suggests you manipulate what you receive from the backend and transform it into something like this:
+
+```js
+{
+  "posts": {
+    "byId": {
+      "post1": {
+        "id": "post1",
+        "author": "user1",
+        "body": "......",
+        "comments": ["comment1", "comment2"]
+      },
+      "post2": {
+        ...
+      }
+    },
+    "allIds": ["post1", "post2"]
+  },
+  "comments": {
+    "byId": {
+      "comment1": {
+        "id": "comment1",
+        "author": "user2",
+        "comment": ".....",
+      },
+      "comment2": {
+        "id": "comment2",
+        "author": "user3",
+        "comment": ".....",
+      },
+      ...
+    },
+    "allIds": ["comment1", "comment2", "comment3", "commment4", "comment5"]
+  },
+  "users": {
+    "byId": {
+      "user1": {
+        "username": "user1",
+        "name": "User 1",
+      },
+      ...
+    },
+    "allIds": ["user1", "user2", "user3"]
+  }
+}
+```
+
+This flat structure has a lot of benefits:
+
+* Because each item is only defined in one place, we don't have to try to make changes in multiple places if that item is updated.
+* The reducer logic doesn't have to deal with deep levels of nesting, so it will probably be much simpler.
+* The logic for retrieving or updating a given item is now fairly simple and consistent.  Given an item's type and its ID, we can directly look it up in a couple simple steps, without having to dig through other objects to find it.
+
+Plus, A normalized state structure generally implies that more components are connected and each component is responsible for looking up its own data, as opposed to a few connected components looking up large amounts of data and passing all that data downwards. As it turns out, having connected parent components simply pass item IDs to connected children is a good pattern for optimizing UI performance in a React Redux application, so keeping state normalized plays a key role in improving performance.
+
+> **Note:** to avoid doing this by yourself, Redux suggests the use of [Normalizr](https://github.com/paularmstrong/normalizr), that can flatten your nested structure if you give it the JSON schema.
+
+#### Selectors
+
+Most React and Redux applications have a lot of logic to manipulate the state. This logic is often used in several components and it is clearly not part of their responsibility. For instance, consider the `getPages()` method of the `<App />` component.
+
+```js
+public getPages() {
+  const { pathname } = this.props;
+
+  if (pathname === '/') {
+    return [{ name: 'Home', url: '/' }];
+  }
+
+  return pathname.split('/').map(item => ({
+    name: item ? item[0].toUpperCase() + item.slice(1).replace('-', ' ') : 'Home',
+    url: `/${item}`
+  }));
+}
+```
+
+For this type of methods that only manipulate the state, Redux suggests the use of **selectors**, which are simply functions that encapsulate this logic and can be reused across your application. Making this a selector is simple, you only need to create a **selectors.ts** file and place it inside the proper data domain folder:
+
+```js
+export const getPages = (state) => {
+  const { pathname } = this.state;
+
+  if (pathname === '/') {
+    return [{ name: 'Home', url: '/' }];
+  }
+
+  return pathname.split('/').map(item => ({
+    name: item ? item[0].toUpperCase() + item.slice(1).replace('-', ' ') : 'Home',
+    url: `/${item}`
+  }));
+}
+```
+
+Then, consume this selector in your container component.
+
+```js
+import { connect } from 'react-redux';
+import { actions, selectors } from '../../domains';
+import App from './App';
+
+const mapStateToProps = (state: any) => ({
+  pathname: selectors.getPages(state),
+  ...
+});
+
+...
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+```
+
+> **Note:** there is a well-known library to generate selectors named [Reselect](https://github.com/reduxjs/reselect), which provides a lot of goodies like computation of derived data, selectors composition and memoization.
+
 
