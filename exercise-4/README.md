@@ -266,24 +266,168 @@ node {
 
 ## Section 2: Advanced topics
 
-Some good practices
-  Short circuit evaluation
-  Destructuring assignment https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-  Object spread operator https://redux.js.org/recipes/usingobjectspreadoperator
-  Inmutable update patterns https://redux.js.org/recipes/structuringreducers/immutableupdatepatterns
-  Actions and reducers https://redux.js.org/basics/reducers#handling-actions
-  CSS processors provided
+In this section, we will present some topics that we think they worth a brief discussion and analysis. We have seen most of them in the previous exercises, but we couldn't grasp their meaning.
 
-Files structure
+### Some good practices
 
-Redux and data
-  Reducers: https://redux.js.org/recipes/structuringreducers
-  Normalize data
+#### Destructuring assignment
 
-Selectors
-  Reselect library
-  Selectors can compute derived data, allowing Redux to store the minimal possible state.
-  Selectors are composable. They can be used as input to other selectors.
-  Reselect Selectors are efficient. A selector is not recomputed unless one of its arguments change.
+The [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables. In conjunction with the [object spread operator](https://github.com/tc39/proposal-object-rest-spread) (still in proposal) it gives us a lot of flexibility to pick up values and copy them to variables.
+
+**Arrays**
+```js
+let a, b, rest;
+
+// This assigns 10 to variable 'a', 20 to variable 'b' [30,40,50] to variable rest
+[a, b, ...rest] = [10, 20, 30, 40, 50];
+```
+
+**Objects**
+```js
+const props = { id: 1, name: 'something', items: [1, 2, 3], color: 'red' };
+
+// This assigns props.id and props.name to variable 'id' and 'name'
+// and the other properties to variable rest (i.e. an { items: [1, 2, 3], color: 'red' }).
+const { id, name, ...rest } = props;
+
+// And it's super helpful to define variables at the beginning of a function
+const myFunction = ({ id, name, ...rest}) => {
+  ...
+};
+
+myFunction(props);
+```
+
+#### Short circuit evaluation
+
+In JavaScript (and other languages), when a condition is evaluated (either an `&&` or an `||`), the second argument is evaluated only if the first argument does (not) satisfy the given condition. This is called **short-circuit evaluation** and it is useful to decide whether to render a component or not.
+
+Instead of doing this:
+
+```js
+const userInfo = ({ user }) => {
+  if (!user) {
+    return null;
+  }
+
+  return <User user={user}  />;
+}
+```
+
+
+We could to this:
+
+```js
+const userInfo = ({ user }) => {
+  return user && <User user={user}  />;
+}
+```
+
+#### CSS modules and preprocessors
+
+We haven't talked a lot about CSS. What we can say here is that the idea of global CSS class names goes against React composition. The most used technique in React is to localize your CSS classes in your React components, in a way that **your CSS classes will only style your component**. For this, one of the tools that we could use is [CSS Modules](https://github.com/css-modules/css-modules).
+
+A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
+
+```css
+/* style.css */
+.success {
+  color: green;
+}
+```
+
+When importing the CSS Module from a JS Module, it exports an object with all mappings from local names to global names.
+
+```js
+import React from 'react';
+import styles from "./style.css";
+
+const SuccessMessage = ({props}) => (
+  <div className={styles.success}>
+    Success!!
+  </div>
+);
+
+export default SuccessMessage;
+```
+
+By localizing your CSS class names (i.e. renaming them to be unique), this library guarantees a modular and reusable CSS:
+
+* No more conflicts.
+* Explicit dependencies.
+* No global scope.
+
+### Files structure
+
+React and Redux don't have opinions on how you put files into folders. There are a few common strategies that have their own props/cons:
+
+* **Rails-style:** separate folders for “actions”, “constants”, “reducers”, “containers”, and “components”. This is the most common strategy in startup guides and documentation, but it doesn't age well nor it helps you during refactoring a component and its actions/reducers.
+
+    ```
+    /src
+      /actions
+        products.js
+        user.js
+        special-offers.js
+        ...
+      /reducers
+        products.js
+        user.js
+        special-offers.js
+        ...
+      /containers
+        Home.tsx
+        ShoppingCart.tsx
+      /components
+        Home.tsx
+        ShoppingCart.tsx
+        Topbar.tsx
+        Sidebar.tsx
+        Deals.tsx
+    /tests
+      ...
+    ```
+
+* **Domain-style:** separate folders per feature or domain, possibly with sub-folders per file type. With this approach, you can group everything that makes sense to group into a single folder, and use the **index.ts** files to export what you want to expose. We do split React (components) and Redux (data domain), as the actions and reducers are usually used in more than one component.
+
+This is the approach we were using in the exercises.
+
+    ```
+    /src
+      /components
+        /Home
+          index.ts
+          Home.tsx
+          Home.container.tsx
+          Home.tests.tsx
+        /ShoppingCart
+          index.ts
+          ShoppingCart.tsx
+          ShoppingCart.container.tsx
+          ShoppingCart.tests.tsx
+        /Topbar
+          index.ts
+          Topbar.tsx
+          Topbar.tests.ts
+        ...
+      /domains
+        index.ts
+        /products
+          index.ts
+          actions.ts
+          reducers.ts
+        /user
+          index.ts
+          actions.ts
+          reducers.ts
+        /special-offers
+          index.ts
+          actions.ts
+          reducers.ts
+      ...
+    ```
+
+> **Note:** For more information, see [React file structure](https://reactjs.org/docs/faq-structure.html) and [Redux code structure](https://www.google.com.ar/search?q=redux+file+structure&oq=redux+file+struc&aqs=chrome.0.0j69i57j0l4.2279j0j4&sourceid=chrome&ie=UTF-8) documentation.
+
 
 
