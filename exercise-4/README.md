@@ -567,4 +567,28 @@ const mapStateToProps = (state: any) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 ```
 
-> **Note:** there is a well-known library to generate selectors named [Reselect](https://github.com/reduxjs/reselect), which provides a lot of goodies like computation of derived data, selectors composition and memoization.
+There is a well-known library to generate selectors named [Reselect](https://github.com/reduxjs/reselect), which provides a lot of goodies like computation of derived data, selectors composition and memoization.
+
+```js
+import { createSelector } from 'reselect'
+
+const getVisibilityFilter = (state, props) => state.todoLists[props.listId].visibilityFilter;
+const getTodos = (state, props) => state.todoLists[props.listId].todos;
+const getVisibleTodos = createSelector(
+  [getVisibilityFilter, getTodos],
+  (visibilityFilter, todos) => {
+    switch (visibilityFilter) {
+      case 'SHOW_COMPLETED':
+        return todos.filter(todo => todo.completed);
+      case 'SHOW_ACTIVE':
+        return todos.filter(todo => !todo.completed);
+      default:
+        return todos;
+    }
+  }
+);
+
+export default getVisibleTodos;
+```
+
+🎉🎉🎉🎉
