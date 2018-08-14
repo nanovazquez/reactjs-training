@@ -274,7 +274,7 @@ In this section, we will present some topics that we think they worth a brief di
 
 The [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables. In conjunction with the [object spread operator](https://github.com/tc39/proposal-object-rest-spread) (still in proposal) it gives us a lot of flexibility to pick up values and copy them to variables.
 
-**Arrays**
+##### Arrays
 ```js
 let a, b, rest;
 
@@ -282,7 +282,7 @@ let a, b, rest;
 [a, b, ...rest] = [10, 20, 30, 40, 50];
 ```
 
-**Objects**
+##### Objects
 ```js
 const props = { id: 1, name: 'something', items: [1, 2, 3], color: 'red' };
 
@@ -390,8 +390,6 @@ React &andRedux don't have opinions on how you put files into folders. There are
 
 * **Domain-style:** separate folders per feature or domain, possibly with sub-folders per file type. With this approach, you can group everything that makes sense  into a single folder, and use the **index.ts** files to export what you want to expose. We do split React (components) and Redux (data domain), as the actions and reducers are usually used in more than one component.
 
-This is the approach we were using in the exercises.
-
     ```
     /src
       /components
@@ -428,7 +426,6 @@ This is the approach we were using in the exercises.
     ```
 
 > **Note:** For more information, see [React file structure](https://reactjs.org/docs/faq-structure.html) and [Redux code structure](https://www.google.com.ar/search?q=redux+file+structure&oq=redux+file+struc&aqs=chrome.0.0j69i57j0l4.2279j0j4&sourceid=chrome&ie=UTF-8) documentation.
-
 
 ### Redux and data management
 
