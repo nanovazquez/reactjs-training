@@ -56,10 +56,10 @@ _Pro tip! Your newly created script will help you to fix a significant amount of
 
 ### Unit testing
 
-Unit testing your code is just one command away: `npm run test`. By running this, you will execute [Jest](https://jestjs.io/), the de-facto unit testing utility for React applications. This tool will execute all tests inside the _*.test.ts_ or _*.spec.ts_ files. We already have one test in place, let's see how it works:
+Unit testing your code is just one command away: `npm run test`. By running this, you will execute [Jest](https://jestjs.io/), the de-facto unit testing utility for React applications. This tool will execute all tests inside the _*.test.ts_ or _*.spec.ts_ files. We already have one test in place, **App.test.tsx**, let's see how it works:
 
 1. In the root folder of the exercise, run `npm run test`. It won't work as you haven't set up anything yet.
-1. Let's start with a basic test instead. With `npm run test` still running, replace the entire `it()` method with the following:
+1. Now, with `npm run test` still running, replace the entire `it()` method of the **src/components/App/App.test.tsx** file with the following:
 
     ```js
     it('returns the proper page', () => {
@@ -89,7 +89,7 @@ To test the component, we have two options: render your component in a browser o
 
     > **Note:** We've just installed `enzyme` and the package with its declaration files, `@types/enzyme`. The other two packages are needed to configure Enzyme correctly, as we will see in the next step.
 
-1. Now create the file **src/setup-tests.ts** that will be automatically loaded when running tests. This file will configure Enzyme to work with React 16.
+1. Now create the file **src/setupTests.ts** that will be automatically loaded when running tests. This file will configure Enzyme to work with React 16.
 
     ```js
     import * as enzyme from 'enzyme';
