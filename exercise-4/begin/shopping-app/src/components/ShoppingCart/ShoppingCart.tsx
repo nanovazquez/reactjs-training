@@ -2,10 +2,10 @@ import * as React from 'react';
 import './styles.css';
 import { IProps } from './types';
 
-class ShoppingCart extends React.PureComponent<IProps, {}> {
+class ShoppingCart extends React.PureComponent<IProps> {
 
   public handleItemRemove = (evt: any) => {
-    const { items, onItemRemove } = this.props;
+    const { items = [], onItemRemove = () => {} } = this.props;
     evt.preventDefault();
 
     const itemToRemove = items.find(item => item.id === evt.currentTarget.dataset.id);

@@ -1,9 +1,10 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import App from './index';
+import App from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+it('returns the proper page', () => {
+  const app = new App({ pathname: '/' });
+  const result = app.getPages();
+
+  expect(result.length).toBe(1);
+  expect(result[0].name).toBe('Home');
+  expect(result[0].url).toBe('/');
 });

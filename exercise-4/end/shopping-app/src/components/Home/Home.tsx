@@ -22,7 +22,15 @@ class Home extends React.PureComponent<IProps> {
     }
   }
 
-  public renderProducts() {
+  public render() {
+    return (
+      <div className="home">
+        { this.renderProducts() }
+      </div>
+    );
+  }
+
+  private renderProducts() {
     const { products } = this.props;
 
     if (!products || !products.length) {
@@ -36,14 +44,6 @@ class Home extends React.PureComponent<IProps> {
         <span className="product-item-price">{item.price}</span>
       </a>
     ));
-  }
-
-  public render() {
-    return (
-      <div className="home">
-        { this.renderProducts() }
-      </div>
-    );
   }
 }
 

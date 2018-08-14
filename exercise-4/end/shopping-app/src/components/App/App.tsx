@@ -12,7 +12,7 @@ class App extends React.Component<IProps, {}> {
   }
 
   public getPages() {
-    const { pathname } = this.props;
+    const { pathname = '' } = this.props;
 
     if (pathname === '/') {
       return [{ name: 'Home', url: '/' }];
