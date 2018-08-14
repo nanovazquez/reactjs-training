@@ -300,7 +300,7 @@ myFunction(props);
 
 #### Short circuit evaluation
 
-In JavaScript (and other languages), when a condition is evaluated (either an `&&` or an `||`), the second argument is evaluated only if the first argument does (not) satisfy the given condition. This is called **short-circuit evaluation** and it is useful to decide whether to render a component or not.
+In JavaScript (and other languages), when a condition is evaluated (either `&&` or `||`), the second argument is evaluated only if the first argument does (not) satisfy the given condition. This is called **short-circuit evaluation** and it is useful to decide whether to render a component or not.
 
 Instead of doing this:
 
@@ -351,7 +351,7 @@ const SuccessMessage = ({props}) => (
 export default SuccessMessage;
 ```
 
-By localizing your CSS class names (i.e. renaming them to be unique), this library guarantees a modular and reusable CSS:
+By localizing your CSS class names (i.e., renaming them to be unique), this library guarantees a modular and reusable CSS:
 
 * No more conflicts.
 * Explicit dependencies.
@@ -359,9 +359,9 @@ By localizing your CSS class names (i.e. renaming them to be unique), this libra
 
 ### Files structure
 
-React and Redux don't have opinions on how you put files into folders. There are a few common strategies that have their own props/cons:
+React &andRedux don't have opinions on how you put files into folders. There are a few common strategies that have their own props/cons:
 
-* **Rails-style:** separate folders for “actions”, “constants”, “reducers”, “containers”, and “components”. This is the most common strategy in startup guides and documentation, but it doesn't age well nor it helps you during refactoring a component and its actions/reducers.
+* **Rails-style:** separate folders for “actions”, “constants”, “reducers”, “containers”, and “components”. This is the most common strategy in startup guides and documentation, but it doesn't age well, nor it helps you while refactoring a component and its actions/reducers.
 
     ```
     /src
@@ -388,7 +388,7 @@ React and Redux don't have opinions on how you put files into folders. There are
       ...
     ```
 
-* **Domain-style:** separate folders per feature or domain, possibly with sub-folders per file type. With this approach, you can group everything that makes sense to group into a single folder, and use the **index.ts** files to export what you want to expose. We do split React (components) and Redux (data domain), as the actions and reducers are usually used in more than one component.
+* **Domain-style:** separate folders per feature or domain, possibly with sub-folders per file type. With this approach, you can group everything that makes sense  into a single folder, and use the **index.ts** files to export what you want to expose. We do split React (components) and Redux (data domain), as the actions and reducers are usually used in more than one component.
 
 This is the approach we were using in the exercises.
 
@@ -432,7 +432,7 @@ This is the approach we were using in the exercises.
 
 ### Redux and data management
 
-Redux suggests the use of two techiques to manipulate data:
+Redux suggests the use of two techniques to manipulate data:
 
 #### Normalize data
 
@@ -506,17 +506,17 @@ It suggests you manipulate what you receive from the backend and transform it in
 
 This flat structure has a lot of benefits:
 
-* Because each item is only defined in one place, we don't have to try to make changes in multiple places if that item is updated.
-* The reducer logic doesn't have to deal with deep levels of nesting, so it will probably be much simpler.
-* The logic for retrieving or updating a given item is now fairly simple and consistent.  Given an item's type and its ID, we can directly look it up in a couple simple steps, without having to dig through other objects to find it.
+* Information is only present in a simple place, simplifying updates.
+* The reducer logic will be much easier to read, as it has to deal with a simpler structure.
+* The logic for retrieving or updating a given item is now more straightforward. We can directly look the item's id up in a couple of simple steps, without having to dig through other objects to find it.
 
-Plus, A normalized state structure generally implies that more components are connected and each component is responsible for looking up its own data, as opposed to a few connected components looking up large amounts of data and passing all that data downwards. As it turns out, having connected parent components simply pass item IDs to connected children is a good pattern for optimizing UI performance in a React Redux application, so keeping state normalized plays a key role in improving performance.
+Plus, A normalized state structure generally implies that more components are connected, and each component is responsible for looking up its data, as opposed to a few connected components looking up large amounts of data and passing all that data downwards. As it turns out, having connected parent components simply pass item IDs to connected children is a good pattern for optimizing UI performance in a React Redux application, so keeping state normalized plays a crucial role in improving performance.
 
 > **Note:** to avoid doing this by yourself, Redux suggests the use of [Normalizr](https://github.com/paularmstrong/normalizr), that can flatten your nested structure if you give it the JSON schema.
 
 #### Selectors
 
-Most React and Redux applications have a lot of logic to manipulate the state. This logic is often used in several components and it is clearly not part of their responsibility. For instance, consider the `getPages()` method of the `<App />` component.
+Most React and Redux applications have a lot of logic to manipulate the state. This logic is often used in several components, and clearly, it is not part of their responsibilities. For instance, consider the `getPages()` method of the `<App />` component.
 
 ```js
 public getPages() {
@@ -533,7 +533,7 @@ public getPages() {
 }
 ```
 
-For this type of methods that only manipulate the state, Redux suggests the use of **selectors**, which are simply functions that encapsulate this logic and can be reused across your application. Making this a selector is simple, you only need to create a **selectors.ts** file and place it inside the proper data domain folder:
+For this type of methods that only manipulate the state, Redux suggests the use of **selectors**, which are simply functions that encapsulate this logic to be reused across your application. Making this a selector is simple, you only need to create a **selectors.ts** file and place it inside the proper data domain folder:
 
 ```js
 export const getPages = (state) => {
@@ -568,5 +568,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 ```
 
 > **Note:** there is a well-known library to generate selectors named [Reselect](https://github.com/reduxjs/reselect), which provides a lot of goodies like computation of derived data, selectors composition and memoization.
-
-
