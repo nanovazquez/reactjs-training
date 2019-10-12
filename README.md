@@ -2,23 +2,16 @@
 
 # ReactJS Training
 
-This training is intended to introduce web development using the ReactJS ecosystem to any developer. It consists of different exercises:
-
-- Exercise 1: Introduction to React with TypeScript and its ecosystem
-- Exercise 2: State management
-- Exercise 3: Navigation
-- Exercise 4: Everything you need to know to go to PROD
-
-You can find the slides that introduce the exercises of this training [here](https://docs.google.com/presentation/d/1iB-UDYZbJEOfXmJJ3kj-EklgE_rDcAo-eVZO7fFVcN8/edit#slide=id.g3ec7f0c99c_0_9).
+This training is intended to introduce web development using the ReactJS ecosystem to any developer. It consists of different exercises that focus on specific topics that will be learnt while coding. You can find the slides that introduce the exercises of this training [here](https://docs.google.com/presentation/d/1iB-UDYZbJEOfXmJJ3kj-EklgE_rDcAo-eVZO7fFVcN8/edit#slide=id.g3ec7f0c99c_0_9).
 
 ### Key takeaways:
 
 Participants will learn:
 
+- The basics of web development today (2019/2020)
 - How to use React and TypeScript to create web applications
-- How to store & manage the state of your web application using Redux
+- How to store & manage the state of your web application with React and Redux
 - How to build optimized, production-ready applications with zero-configuration.
-- How to deploy applications in Production.
 
 ### Pre-requisites
 
@@ -32,9 +25,9 @@ Participants should have installed:
 
 The workshop is divided in four exercises:
 
-- [Introduction to React with TypeScript and its ecosystem](./exercise-1)
-- [Managing your application state with Redux](./exercise-2)
-- [How to deploy web applications into Production](./exercise-3)
+- [Understanding React and TypeScript](./exercise-1)
+- [Creating your first app with React and TypeScript](./exercise-2)
+- [Managing your application state with Redux](./exercise-3)
 - [Advanced topics](./exercise-4)
 
 Each exercise has everything you need to start with inside the **begin** folder and the result we expect you to achieve inside the **end** folder.

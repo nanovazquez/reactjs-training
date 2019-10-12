@@ -1,421 +1,565 @@
-# State management
+# Creating your first app with React and TypeScript
 
-In this exercise, we will review what we've done in the previous exercise and try to analyze together the limitations of the strategy used to handle state (Parent-Child components and component state). Then, we will propose another tactic best-suited for medium/large applications (Redux), and we'll try to study the tradeoffs of this new approach.
+Now that we've covered the basics, It's time to make things real. In this exercise, we will set up an application from scratch, and then we will write some code to implement a game, [Connect Four](https://en.wikipedia.org/wiki/Connect_Four), by following a step-by-step walkthrough that will also help us to learn while we code. For this, we will create a real-life application.
 
-## Introduction: A quick recap
+![Connect four](./assets/images/connect-four.gif)
 
-> **Note:** for this exercise, you need [Redux devtools in your browser](https://github.com/zalmoxisus/redux-devtools-extension#installation). Follow the steps in the link and install it before continuing with this section.
+Are you ready? 👾
 
-Let's talk first about what we learned so far. We know that a React application consists of a set of **components** that receive of a set of input, read-only **props** and produce **JSX** code with them. If any of this properties change, new **JSX** may be generated. When users interact with your components, information is passed to the upper levels by executing functions also received via **props**, following the [container and presentational components pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
+### Initial setup
 
-Take a minute to understand the above paragraph. It can be summarized in these two sentences
+> **Note:** You can skip the steps 1-5 and use the application located in the **begin** folder of this Exercise. Remember to use `npm install` before running it.
 
-* In React, **data is unidirectional**, meaning that it flows in one direction, from parent to child.
-* User interaction is translated into **events** that execute our custom code.
+We've seen before that since both TypeScript and JSX don't run in browsers, we need to transpile the code that we'll write in our application. To achieve this, we'll have to present, explain, and set up several tools (Webpack/Rollup, Babel/tsconfig, CSS Modules, etc.). Or we can take advantage of scaffolders, which are baked apps (also named _integrated toolchains_) that are already preconfigured and don’t require any configuration to get started, letting us to **only** focus on our code.
 
-![](./assets/images/react-data-flow.png)
+In these steps, we are going to install Facebook's [Create React app](https://github.com/facebook/create-react-app), the de-facto tool to build React application.
 
-### And what about the state?
+1. In your terminal, run `npx create-react-app connect-four --typescript`. This command will create a TypeScript application inside the folder **connect-four**.
 
-In Exercise 1, we saw that you could store local state using `this.state` and `this.setState()` and, following the [container and presentational components pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0), it's best to centralize this information in a parent component. Now, you should be smart about this, as `this.setState()` would potentially execute a `render()`, **repainting the component and its children**.
+   > **Note:** If `npx` doesn't work you can use `npm i -g create-react-app` and then `create-react-app connect-four --typescript`.
 
-Consider the following component structure:
+1. Wait for the process to complete. You should see a message similar to this:
 
-* We have a root component, **A**, in charge of rendering three children: **A.0**, **A.1** and **A.2**.
-* Similarly, **A.0** is composed of two components: **A.0.0** and **A.0.1**.
-* We did things
+   ![](./assets/images/create-ts-app.png)
 
-![](./assets/images/react-cascading.png)
+1. Browse to the **connect-four** folder you've just created and take a minute or two to analyze the folder structure. You are looking at a fully-functional application with the business logic inside the **src** folder:
 
-Now let's analyze the following scenarios:
+   ```
+   connect-four
+   ├── node_modules
+   │   ├── ...
+   ├── public
+   │   ├── favicon.ico
+   │   ├── index.html
+   │   └── manifest.json
+   │   └── ...
+   ├── src
+   │   ├── App.css
+   │   ├── App.test.tsx
+   │   ├── App.tsx
+   │   ├── index.css
+   │   ├── index.tsx
+   │   ├── logo.svg
+   │   └── react-app-env.d.ts
+   │   └── serviceWorker.ts
+   ├── .gitignore
+   ├── package-lock.json
+   ├── package.json
+   ├── README.md
+   ├── tsconfig.json
+   └── ...
+   ```
 
-1. Let's say that we followed the [container and presentational components pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) to the letter and all the logic is held in the **A** parent component (smart) and the rest are just presentational (dumb).
+1. Now, run `npm start`. This command runs the app in development mode, providing an automatic reload if you make changes to the code (a.k.a. [Hot Module replacement](https://webpack.js.org/concepts/hot-module-replacement/)).
+1. Open http://localhost:3000 to view the application in the browser.
 
-    ![](./assets/images/react-cascading-root.png)
+   ![](./assets/images/create-ts-app-browser.png)
 
-    - When user interactions update the state, the `this.setState()` will be executed at the root level, _forcing a re-render of all five children components_, even if we need only one to change.
-    - This behavior of React components, the need to re-render the component and its children, is called **cascading rendering** (or _cascading updates_).
-    - It's easy to understand that, by using this approach, performance is lost in favor of code organization.
+   💃 🕺 👏 Congratulations! 👏 🕺 💃 <br/>
+   You've created your first application with React and TypeScript
 
-1. Now, let's say we move some state to **A0**, only causing the re-render of its two children when the `this.setState()` is called.
+1. Let's take it for a spin. Open the app with VSCode or the IDE of your preference and navigate to the **src/App.tsx** folder.
 
-    ![](./assets/images/react-cascading-improvement.png)
+   > **Note:** _Pro tip!_ You can open VSCode pointing to the folder your terminal is by running `code .`. Similarly, you could do the same for Atom with `atom .`. And for Sublime, you can run `subl .`.
 
-    - This approach **improves the cascading rendering situation a little bit**, only re-rendering two components instead of five when, let's say, we need only one to render.
-    - The tradeoff is that we have to split the logic and move it to other places, but this works with short numbers.
+1. Take a couple of minutes to analyze the code in this file:
 
-Notice that this is just a simple example. You can imagine that a real-world application has dozens of components and having to make this analysis several times in certainly an overkill. At this point you should be asking yourself, is there something that would help me to simplify the state management, avoiding the loss of performance due to the cascading rendering and, at the same time, unifying all the logic in a single place.
+   - At the top, you have some `import` statements. This is the way JavaScript (ES6) import modules to your code. The value imported is stored inside of a variable for later use. You can learn more about ES6 imports [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import).
+   - _Line 5_ defines a React Function component named `App`. It returns JSX code that is rendered by the browser (after the transpilation). Remember that React components help us to split our code into small pieces, following the [SRP](https://en.wikipedia.org/wiki/Single_responsibility_principle).
+   - Between _lines 6 and 23_ there is JSX code that renders what we saw before in the browser. Notice it is almost identical to HTML, except _line 9_ that sets up the _src_ prop using a JavaScript variable reference (`<img src={logo} .. />`)
+   - Last, _line 26_ exports our `<App />` function to be available for use elsewhere.
 
-There should be a better way, right?
+1. With the app running locally (if you have stopped it, run `npm start` in your terminal), modify the code by removing _line 17_ and save your changes. Note that:
 
-## Section 1: Introducing Redux
+   - The IDE displays an error:
 
-[Redux](https://redux.js.org/introduction/threeprinciples) is a simple library that proposes a very simple approach to manage your state. Although it introduces several new concepts, it can be described in three core concepts (that we already know about):
+     ![](./assets/images/ts-ide-error.png)
 
-* **Single source of truth**: The state of your whole application is stored in an object tree within a single store.
-* **State is read-only**: The only way to change the state is to emit an action, an object describing what happened.
-* **Changes are made with pure functions**: To specify how the state tree is transformed by actions, you write pure reducers.
+   - The browser also displays the compilation error:
 
-![](./assets/images/react-redux.png)
+     ![](./assets/images/ts-browser-error.png)
 
-> **Note:** There is a lot to learn about Redux and this course could not cover everything. If you want to know more, we suggest that you should start from the [basics](https://redux.js.org/basics).
+1. Fix the error by undoing what you did (we removed the `</div>` closing tag), save your changes and wait for the browser to refresh your app.
+1. Now, open the **src/index.tsx** file. This is the main entry point of the application. The two most important things you need to learn now are:
 
-### The Shopping cart app
+   ```js
+   import React from "react";
+   import ReactDOM from "react-dom";
+   import App from "./App";
 
-We created a simple shopping cart application to demonstrate the basic concepts of state management and user interaction. This application uses everything we've learned so far, and the plan today is to take it to the next level with the help of Redux. But before doing that, let's do a quick review of the app:
+   ReactDOM.render(<App />, document.getElementById("root"));
+   ```
 
-1. Open the _Shopping cart app_ located in the **begin/shopping-app** folder of this Exercise.
-1. In the terminal, and navigate to the root folder and run `npm i` to install all the dependencies.
-1. While this command is being executed, take a few minutes to analyze the folder structure and the main components.
+   - When the app starts, we mount the `<App />` component in the HTML element with ID `root`. This means that the first component to be rendered in the browser is `<App />`.
+   - The `ReactDOM.render()` method will render the `<App />` component in the browser, inside the "root" `<div>` element, like in the initial examples. _This is the magic of React._ It doesn't matter if the app you are going to build is basic or complex, the code to render it is the same.
 
-    - First, we have a _src/index.tsx_ file, the entry point of our app, in charge of rendering the main `<App />` component in the DOM node.
-    - The `<App />` component (_src/components/App/index.tsx_ file) holds the main logic of this app, and following the [container and presentational components pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0), it's in charge of several things, from displaying the displaying the main presentational components to reacting to user interaction.
-    - Then we have two presentational components, `<TopBar />` and `<ShoppingCart />`, that receive everything they need from its parent.
-    - Finally, notice that the `<TopBar />` component has sub-components, with clear responsibilities.
+1. Last, open the **public/index.html** folder. This file has the HTML code that the browser renders. Notice that _line 31_ has an empty `<div id="root"></div>` element. It is where your app will be "mounted", meaning that your application's code will be injected into this HTML element.
 
-1. After everything is installed, open the terminal in the root folder of the app run `npm start`. Click the _Remove_ button and see that both the list and the count indicator at the top right are affected by this.
+#### Wrapping up
 
-    ![](./assets/images/shopping-cart-app.png)
+In this quick walkthrough, we did the following:
 
-Notice that the scenario proposed is similar to what we discussed before. To sum it up, if something changes in the `<ShoppingCart />` component, we will re-render everything (although, in this case, we need it). In the next step, we will install Redux and move some of the logic of the `<App />` component to somewhere else.
+1. We created a fully-functional web app with a single (npm) command in the Terminal.
+1. We executed the web application locally and displayed it in the browser.
+1. We analyzed the _React + TypeScript_ code of the app, both the main component and the main entry code. And then, we reviewed the main HTML code.
 
-## Section 2: Migrating to Redux
+Remember that **browsers only understand HTML, JS and CSS**. This app has a **build** process that will generate JS and CSS files inside of a _dist_ folder. These files will be referenced in an (also generated) **index.html** file. And this file will be parsed, read, and interpreted by the browser.
 
-In this section, we will go through the steps needed to migrate from the local component state management to Redux. For this, we will use a simple shopping cart application.
+### How to add new components
 
-1. Let's start by installing the packages we need. We'll go through all of them later, for now, just run `npm i -S redux react-redux redux-actions redux-thunk-promise`.
-1. And their definition files: `npm i -D @types/redux @types/react-redux @types/redux-actions`.
+Now that we understand the foundations of our app, it's time to add the game logic. As we explained in the [Exercise 1](../exercise/1), React applications split the business logic into different components. But there are different responsibilities in an application. We'll use a widely-known pattern, [Presentational and Container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0), to organize our components in a simple, but yet powerful structure:
 
-    > **Note:** A definition file contains the types and declarations of a particular JS library that was not written in TypeScript. They are part of the [open-source project Definitely typed](https://github.com/DefinitelyTyped/DefinitelyTyped), maintained by the TS community that, as of today, has more than 4000 definition files.
+![React Data Flow](./assets/images/react-data-flow.png)
 
-1. Now, create a folder named **domains** inside the **src** folder. We'll save all of our _data-domain related_ files there.
-1. Currently, we only need to store the current user ID and the user shopping cart items. For this, create a folder named **user** inside the **src/domain** folder. We will create **actions** and **reducers** that will take care of updating the user information based on UI interaction.
+This technique proposes to encapsulate all the business logic and state in parent components (_Container_, or _Smart_) and use their child components (_Presentational_, or _Dumb_) to organize the code in charge of the visuals. You use the **props** to send information to the children, in charge of rendering the app, and to connect user interaction with parent's functions.
 
-![](./assets/images/redux-simplified.png)
+> **Note:** since your app's will end up cascading the information from top to bottom, this approach is best suited for small/middle-sized apps. Large applications composed of a deeply nested hierarchy require different treatments that we will see in the next Exercise.
 
-### Actions and reducers
+By following this technique, we can identify the following entities:
 
-1. We'll need to create some files to manage different responsibilities. We'll start by creating an **actions.ts** file for our app's actions creators. _What is an action creator?_ a function that returns/creates actions.
+- An **App** component, in charge of storing the state of the application. And to calculate who is the winner. It is the "parent"/"container"/"smart" component.
+- A **Board** component, responsible for drawing the elements of the game, the "child"/"presentational"/"dumb" components.
+- The board is composed of multiple **Columns** composed of different **Tiles** that might or might not have a chip. When a column is clicked, a new chip is added into an empty tile at the bottom. This is part of the business logic of the app.
 
-    Paste the following JS code inside the **src/domains/user/actions.ts** file. This code defines two actions, one sync and other async.
+![Connect four components](./assets/images/connect-four-components.png)
 
-    ```js
-    import { createAction } from 'redux-actions';
-    import usersService from '../../services/users-service';
-
-    const FETCH_SHOPPING_CART_ITEMS = 'FETCH_SHOPPING_CART_ITEMS';
-    const REMOVE_SHOPPING_CART_ITEM = 'REMOVE_SHOPPING_CART_ITEM';
-
-    export default {
-      FETCH_SHOPPING_CART_ITEMS,
-      REMOVE_SHOPPING_CART_ITEM,
-      fetchShoppingCartItems: createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getUserShoppingCartItems),
-      removeShoppingCartItem: createAction(REMOVE_SHOPPING_CART_ITEM),
-    };
-    ```
-
-    > **Note:** Actions are plain JavaScript objects that have a `type` property that indicates the type of action being performed. They are payloads of information that _dispatch_ (send) from your application to your store. You can learn more about actions [here](https://redux.js.org/basics/actions).
-
-1. Next, we'll create the user's reducers. They are in charge of modeling our new app's state after receiving user action. Since we defined two actions, it makes sense to define two reducers. Paste the following code in a filed named **reducers.ts**, located inside the **src/domains/user** folder:
-
-    Note that:
-    * We define an initial state, similar to what we have in the `<App />` component.
-    * We don't mutate the state. Instead, we create a copy of it.
-    * We only change what we want to change. The rest remains the same.
-
-    ```js
-    import { handleActions } from 'redux-actions';
-    import actions from './actions';
-
-    const initialState = {
-      shoppingCartItems: [],
-      userId: 'user-id',
-    };
-
-    export default handleActions({
-      [actions.FETCH_SHOPPING_CART_ITEMS]: (state: any, action: any) => {
-        const items = action.payload;
-        return {
-          ...state,
-          shoppingCartItems: items,
-        };
-      },
-
-      [actions.REMOVE_SHOPPING_CART_ITEM]: (state: any, action: any) => {
-        const itemToRemoveId = action.payload as string;
-        const filteredItems = state.shoppingCartItems.filter((item: any) => item.id !== itemToRemoveId)
-
-        return {
-          ...state,
-          shoppingCartItems: filteredItems
-        };
-      },
-    }, initialState);
-    ```
-
-    > **Note:** Reducers specify how the application's state changes in response to actions sent to the store. Remember that actions only describe what happened, but don't model how the application's state changes. Find out more about them [here](https://redux.js.org/basics/reducers).
-
-1. Last, create an **index.ts** file inside the **src/domains** folder and paste the following code. This file wraps up everything we did to consume it easily from the outside.
-
-    ```js
-    import userActions from './user/actions';
-    import userReducers from './user/reducers';
-
-    const actions = {
-      ...userActions,
-    };
-
-    const reducers = {
-      user: userReducers,
-    };
-
-    export {
-      actions,
-      reducers,
-    };
-    ```
+> **Note:** Of course, this structure can vary depending on your preference. _Can you think of a different way of organizing your code?_.
 
-    > **Note:** Did you notice that you are wrapping your user's reducers in the `user` property? This will be the state's node in which all the user information will go. Future state, like products or categories, would use different nodes. If you've followed this convention, you've probably noticed that you'll just only need to copy and paste the user's folder for that.
-
-### Refactoring the App component
+#### Creating a Tile component
 
-Next, we need to do some modifications to the `<App />` component. These changes will be mostly simplifications because we are moving the state management logic away from it.
-
-1. Open the **src/components/App/types.ts** file and replace the `IProps` and `IState` interfaces with the following code. Note that we are merging these two interfaces because we will receive everything via `props`, including the `actions`.
-
-    ```js
-    export interface IProps {
-      shoppingCartItems: IProduct[];
-      userId: string;
-      fetchUserShoppingCartItems: (userId: string) => Promise<IProduct[]>;
-      onRemoveShoppingCartItem: (itemId: string) => any;
-    }
-    ```
-
-1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.tsx** file. And apply the following changes to this file.
-
-1. First of all, replace the import of types with `import { IProps } from './types';`.
-1. And update the class definition with `class App extends React.Component<IProps, {}>`.
-1. Notice that we are not using state anymore. Remove the line in the `constructor()` that initializes it. It should now look like the following:
-
-    ```js
-    class App extends React.Component<IProps, {}> {
-      constructor(props: any) {
-        super(props);
-      }
-      ...
-    }
-    ```
-
-1. Then, replace the `handleRemoveShoppingCartItem()` method with the following code that simply fires an `action`:
-
-    ```js
-    public handleRemoveShoppingCartItem = (itemToRemoveId: string) => {
-      const { onRemoveShoppingCartItem = (id: string) => id } = this.props;
-      onRemoveShoppingCartItem(itemToRemoveId);
-    }
-    ```
-1. Repeat the same for the `componentDidMount()` method:
-
-    ```js
-    public componentDidMount() {
-      const { userId, fetchUserShoppingCartItems = (id: string) => Promise.resolve([]) } = this.props;
-      fetchUserShoppingCartItems(userId);
-    }
-    ```
-1. The last part is to update from where we get the shopping cart items in the `render()` method. You can do that by simply changing that we are getting the values from `props` instead of `state`.
-
-    ```js
-      public render() {
-        const pages = this.getPages();
-        const { shoppingCartItems } = this.props;
+1. Create a new folder named **components** inside the **src** folder.
+1. Inside this folder, create a file named **index.ts**. We will use it to expose the components we want to make publicly available outside of this folder.
+1. Create a folder named **Tile** and inside the following files: a **Tile.module.css** file to store the CSS code, a **Tile.tsx** file for the React's component logic and a **types.ts** file for the TypeScript types of the component.
+1. Open the **src/components/Tile/types.ts** file and paste the following code. This code defines the interface (or contract) of our component by typing its props.
 
-        ...
-      }
-    ```
-
-1. We are almost there! Now we need to create the file that wraps this component and enhances it, using the Redux state information. For this create a new file named **src/components/App/App.container.ts** and paste the following code:
-
-    ```js
-    import { connect } from 'react-redux';
-    import { actions } from '../../domains';
-    import App from './App';
-
-    const mapStateToProps = (state: any) => ({
-      shoppingCartItems: state.user.shoppingCartItems,
-      userId: state.user.userId,
-    });
-
-    const mapDispatchToProps = (dispatch: any) => ({
-      fetchUserShoppingCartItems: (userId: string) => dispatch(actions.fetchShoppingCartItems(userId)),
-      onRemoveShoppingCartItem: (itemId: string) => dispatch(actions.removeShoppingCartItem(itemId)),
-    });
-
-    export default connect(mapStateToProps, mapDispatchToProps)(App);
-    ```
-
-    Technically speaking, you created a container component. But ...isn't that what you have been doing? Yes and no. With Redux in place, the _container_ now is in charge of connecting your component to the state, by doing two separate (but yet simple) things:
-
-    * Map the Redux state with the component's props.
-    * Map the Redux actions with the component's props. And dispatch them when executed.
-
-    The rest is just sugar syntax to simplify the connection of your component with Redux.
-
-    > **Note:** Create container components by connecting them when it's convenient. Whenever you feel like you're duplicating code in parent components to provide data for same kinds of children, time to extract a container. Generally, as soon as you feel a parent knows too much about “personal” data or actions of its children, time to create a container.
-
-1. Before leaving the **App** folder, let's add an **src/components/App/index.ts** file to simplify the usage of this component from the outside. For this, paste the following code inside this newly created file:
-
-    ```js
-    import AppContainer from './App.container';
-    export default AppContainer;
-    ```
-
-### Configuring the Redux store
-
-The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
-
-1. Open the **src/index.tsx** file.
-1. Add the following `import` statements after the current ones. Most of them are from external libraries, but also notice that you are importing all the `reducers` of your application.
-
-    ```js
-    import { Provider } from 'react-redux';
-    import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-    import thunkPromiseMiddleware from 'redux-thunk-promise';
-    import { reducers } from './domains';
-    ```
-
-1. Next, create your store by passing your reducers and extend it with middlewares and developer tools
-
-    ```js
-    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-    const store = createStore(
-      combineReducers(reducers),
-      composeEnhancers(applyMiddleware(thunkPromiseMiddleware)),
-    );
-    ```
-    > **Note:** Middlewares extends the functionality of the Redux store, by executing custom code while an action is being dispatched. Redux does not support _async actions_ by default, and this is why we are enhancing it with [Redux thunk promise](https://medium.com/@nanovazquez/redux-thunk-promise-thunk-and-fsa-compliant-promise-middleware-for-redux-fad10a941708), a middleware to perform FSA-compliant async actions. If you want to know more about how to configure your store, Redux devtools and middlewares, see [here](https://redux.js.org/recipes/configuringyourstore).
-
-1. Finally, replace the current `ReactDOM.render` lines with the following:
-
-    ```js
-    ReactDOM.render(
-      <Provider store={store}>
-        <App />
-      </Provider>,
-      document.getElementById('root') as HTMLElement
-    );
-    ```
-    > **Note:** A [Provider](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store) is a container component that enables your presentational components to connect with the Redux store. It's the one that let's you receive both the `state` and `dispatch` in the `mapStateToProps()` and `mapDispatchToProps()` functions, respectively.
-
-And the migration is complete! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Take a few minutes to analyze what you did, you could use the diagram below to understand how data flows in a Redux-powered application.
-
-![](./assets/images/redux-data-flow.png)
-
-### Section 3: Add new actions to the app
-
-We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise.
-
-To do this, follow these steps:
-
-1. Open the **src/services/users-service.ts** file and add the following method to return all items. And don't forget also to export it.
-
-    ```js
-    const dummyProducts = [
-      ...
-    ];
-    ...
-
-    function getAllItemsByUser(userId: string) {
-      return Promise.resolve(dummyProducts);
-    }
-
-    export default {
-      getAllItemsByUser,
-      getUserShoppingCartItems,
-    }
-    ```
-
-1. Next, open the **src/domains/user/actions.ts** and add the new action types. As before, don't forget to export everything:
-
-    ```js
-    ...
-    const ADD_SHOPPING_CART_ITEM = 'ADD_SHOPPING_CART_ITEM';
-    const FETCH_ALL_ITEMS = 'FETCH_ALL_ITEMS';
-
-    export default {
-      ADD_SHOPPING_CART_ITEM,
-      FETCH_ALL_ITEMS,
-      ...
-      addShoppingCartItem: createAction(ADD_SHOPPING_CART_ITEM),
-      fetchAllItems: createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getAllItemsByUser),
-      ...
-    };
-    ```
-
-1. Now it's the turn of the reducer. Add the new logic showed below in the **src/domains/user/reducers.ts** file. Notice that we will update the initial state as well.
-
-    ```js
-    ...
-
-    const initialState = {
-      allItems: [],
-      shoppingCartItems: [],
-      userId: 'user-id',
-    };
-
-    export default handleActions({
-      [actions.ADD_SHOPPING_CART_ITEM]: (state: any, action: any) => {
-        const newItem = action.payload;
-        return {
-          ...state,
-          shoppingCartItems: [].concat(...state.shoppingCartItems, newItem)
-        };
-      },
-
-      [actions.FETCH_ALL_ITEMS]: (state: any, action: any) => {
-        const items = action.payload;
-        return {
-          ...state,
-          allItems: items,
-        };
-      },
-
-      ...
-    }, initialState);
-    ```
-
-And that's it! Although we don't have the pages to perform these actions, we could take advantage of Redux devtools to _dispatch_ actions within the browser. For this, open the **Developer tools**, go to the **Redux** tab and click the **Dispatch** button. If you dispatch this action, you will see a new item in your shopping cart.
+   ```ts
+   export interface Props {
+     id: string;
+     chipType?: string;
+     onClick: (id: string) => any;
+   }
+   ```
+
+   With this code, we are telling the component consumer that:
+
+   1. They have to provide an `id` through the component's props.
+   1. They may send a `chipType` to the component. As we mentioned above, tiles can have a chip or be empty.
+   1. They have to attach a function to the `onClick` prop, to trigger code when you click a **Tile**.
+
+1. Then, open the **src/components/Tile.tsx** file and paste the following code:
+
+   ```js
+   import React from "react";
+   import classNames from "classnames";
+   import styles from "./Tile.module.css";
+   import { Props } from "./types";
+
+   export default class Tile extends React.PureComponent<Props> {
+     render() {
+       const { id, chipType, onClick = () => {} } = this.props;
+       const chipCssClass = classNames(styles.chip, chipType === "red" ? styles.red : styles.yellow);
+
+       return (
+         <div className={styles.tile} onClick={() => onClick(id)}>
+           {chipType && <div className={chipCssClass} />}
+         </div>
+       );
+     }
+   }
+   ```
+
+   The **Tile** component is a _dumb_ component in charge of drawing tiles in your board, that may or may not have a chip inside. We decide if a chip is present by checking the value of the `chipType` prop. And we color the chip with CSS. Note that, when clicked, we trigger the `onClick` function (received via props) with the **Tile**'s `id` as parameter.
+
+   > **Note:** Have you noticed that we attached the **Props** interface to the `React.PureComponent` definition? This is how you type React class. An IDE will understand this and will tell you the shape of the components properties if you hover `this.props`. Give it a try!
+
+1. Last, open the **src/components/Tile.module.css** file and paste this CSS code:
+
+   ```css
+   .tile {
+     width: 75px;
+     height: 75px;
+     border: solid 10px #3355ff;
+     border-radius: 100%;
+     background-color: white;
+   }
+
+   .chip {
+     width: 75px;
+     height: 75px;
+     border-radius: 100%;
+     background-color: gray;
+   }
+
+   .yellow {
+     background-color: #ffff33;
+   }
+
+   .red {
+     background-color: #ff010b;
+   }
+   ```
+
+   > **Note:** Create React app treats CSS files with the `[name].module.css` differently from a regular CSS file, by transpiling it using the [CSS Modules](https://github.com/css-modules/css-modules) library. One of the main benefits of it is that it lets you use the same CSS class name in different files, without worrying about naming clashes, by automatically replacing your CSS class names with a "unique" class name of the format [filename]\_[classname]\_\_[hash].
+   >
+   > For more information about this, click [here](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet).
+
+#### Creating a Column component
+
+1. Navigate to the **components** folder and create a new folder inside named **Column**.
+1. Inside this folder, create the following files: a **Column.module.css** file to store the CSS code, a **Column.tsx** file for the React's component logic and a **types.ts** file for the TypeScript types of the component.
+1. Open the **src/components/Column/types.ts** file and paste the following code that defines the props (contract) of the _Column_ component:
+
+   ```js
+   import { ChipsPositions } from "../App/types";
+
+   export interface Props {
+     column: number;
+     rows: number;
+     chipsPositions: ChipsPositions;
+     onTileClick: (id: string) => any;
+   }
+   ```
+
+   With this code, we are defining that:
+
+   - We need to provide A `column` number. This value acts as the ID of the element.
+   - We also need to tell the component how many `rows` it will have.
+   - The `chipsPositions` prop is an object that knows the position of each chip. We will see how this object is built later. For now, you only need to know that it can tell us if there is a chip inside of a **Tile** or not.
+   - Last, the `onTileClick` function is used to let the parent know when the user clicks on a specific tile.
+
+1. Then, open the **src/components/Column.tsx** file and paste the following presentational code:
+
+   ```js
+   import React from "react";
+   import Tile from "../Tile/Tile";
+
+   import styles from "./Column.module.css";
+   import { Props } from "./types";
+
+   export default class Column extends React.PureComponent<Props> {
+     render() {
+       const { column, rows, chipsPositions, onTileClick } = this.props;
+       const tiles = [];
+
+       for (let row = 0; row < rows; row++) {
+         const tileId = `${row}:${column}`;
+         const chipType = chipsPositions[tileId];
+         tiles.push(<Tile key={tileId} id={tileId} chipType={chipType} onClick={onTileClick} />);
+       }
+
+       return <div className={styles.column}>{tiles}</div>;
+     }
+   }
+   ```
+
+   As you see above, what we do here is to render a `<div>` element containing as many **Tile** components as rows. Each tile will receive a `chipType` that can have a value or not. And the `onTileClick()` function to be triggered when clicked. Notice that we define the `tileId` as the combination of a row and a column value. And this value is unique.
+
+1. Last, open the **src/components/Column/Column.module.css** and paste the following CSS code:
+
+   ```css
+   .column {
+     display: flex;
+     flex-direction: column;
+     cursor: pointer;
+   }
+   ```
+
+#### Creating a Board component
+
+1. Similarly, navigate to the **components** folder and create a new folder inside named **Board**.
+1. Inside this folder, create the following files: a **Board.module.css** file to store the CSS code, a **Board.tsx** file for the React's component logic and a **types.ts** file for the TypeScript types of the component.
+1. Open the **src/components/Board/types.ts** file and paste the following code that defines the props (contract) of the _Column_ component:
+
+   ```js
+   import { ChipsPositions } from "../App/types";
+
+   export interface Props {
+     columns: number;
+     rows: number;
+     chipsPositions: ChipsPositions;
+     onTileClick: (id: string) => any;
+   }
+   ```
+
+   This code tells the component's consumer that:
+
+   - It has to provide the number of `columns` and `rows` the board will have.
+   - It has to send the `chipsPositions` object. This information is used by the **Column** component, not the **Board**.
+   - It has to provide an `onTileClick` function, that will be used by the **Tile** component to signal when it is clicked.
+
+1. Then, open the **src/components/Board.tsx** file and paste the following presentational code:
+
+   ```js
+   import React from "react";
+   import Column from "../Column/Column";
+
+   import styles from "./Board.module.css";
+   import { Props } from "./types";
+
+   export default class Board extends React.PureComponent<Props> {
+     renderColumns() {
+       const { columns, rows, chipsPositions, onTileClick } = this.props;
+
+       const columnsComponents = [];
+
+       for (let column = 0; column < columns; column++) {
+         columnsComponents.push(<Column key={column} column={column} rows={rows} chipsPositions={chipsPositions} onTileClick={onTileClick} />);
+       }
+
+       return <>{columnsComponents}</>;
+     }
+
+     render() {
+       return <div className={styles.board}>{this.renderColumns()}</div>;
+     }
+   }
+   ```
+
+   This code is similar to the Column component, but instead of creating Tiles, we create multiple columns, passing the required information to them, and then we render the result. The only difference is that we use a `this.renderColumns()` method to encapsulate this logic.
+
+   > **Note:** _Have you noticed that we also use React.Fragment?_ Probably not because we are using the shorthand `<></>`. It is an equivalent of `<React.Fragment></React.Fragment>`.
+
+1. Last, open the **src/components/Board/Board.module.css** file and paste the following CSS code:
+
+   ```css
+   .board {
+     display: flex;
+     flex-direction: row;
+     border: solid 5px #002bff;
+     border-radius: 5px;
+     background-color: #3355ff;
+   }
+
+   .columns {
+     display: flex;
+     flex-direction: row;
+   }
+   ```
+
+We are almost there! 🙌
+
+#### Creating the App component
+
+We are now going to develop the main logic for our game. Pay special attention to this section:
+
+1. Create a folder named **App** inside the **src/components** folder.
+1. Inside this folder, create the **App.module.css** file, the **App.tsx** file and the **types.ts** file.
+1. Open the **src/components/App/types.ts** file and paste the following info:
+
+   ```js
+   export interface ChipsPositions {
+     [key: string]: Player;
+   }
+
+   type Player = "red" | "yellow" | "";
+
+   export interface Props {
+     columns: number;
+     rows: number;
+   }
+
+   export interface State {
+     chipsPositions: ChipsPositions;
+     gameStatus: string;
+     playerTurn: Player;
+   }
+   ```
+
+   We define multiple important things here:
+
+   - The shape of the `ChipsPositions` object: a dictionary containing in each position one of these (`Player`) values: `"red"`, `"yellow"` or `""` (representing empty).
+   - We define the shape of the App's `Props` and `State`. The former tells us that we need to provide the amount of `columns` and `rows` for the App component to initialize. While the latter tells us all the information that will be stored by the component.
+
+1. Now, open the **src/components/App/App.tsx** and paste the following code:
+
+   ```js
+   import React from "react";
+   import Board from "../Board/Board";
+
+   import { Props, State, ChipsPositions } from "./types";
+   import styles from "./App.module.css";
+
+   export default class App extends React.PureComponent<Props, State> {
+     state: State = {
+       chipsPositions: {},
+       playerTurn: "red",
+       gameStatus: "It's red's turn"
+     };
+
+     calculateGameStatus = (playerTurn: string, chipsPositions: ChipsPositions): string => {
+       // TODO
+     };
+
+     handleTileClick = (tileId: string) => {
+       // TODO
+     };
+
+     renderBoard() {
+       const { columns, rows } = this.props;
+       const { chipsPositions } = this.state;
+       return <Board columns={columns} rows={rows} chipsPositions={chipsPositions} onTileClick={this.handleTileClick} />;
+     }
+
+     renderStatusMessage() {
+       const { gameStatus } = this.state;
+       return <div className={styles.statusMessage}>{gameStatus}</div>;
+     }
+
+     render() {
+       return (
+         <div className={styles.app}>
+           {this.renderBoard()}
+           {this.renderStatusMessage()}
+         </div>
+       );
+     }
+   }
+   ```
+
+   This is the basic structure of the application. We already know what this means. This is "presentational" code to draw/render the **Board** and the **Status** message. We are also initializing the **App**'s state with some default information. This code is entirely functional, but it will do nothing when the user interacts with the board.
+
+1. Implement the `handleTileClick()` method to react when the user clicks on a Tile.
+
+   ```js
+   handleTileClick = (tileId: string) => {
+     const { chipsPositions, playerTurn } = this.state;
+
+     // Get the last empty tile of the column
+     const column = parseInt(tileId.split(":")[1]);
+     let lastEmptyTileId = this.getLastEmptyTile(column);
+
+     // If there is no empty tile in the column, do nothing
+     if (!lastEmptyTileId) {
+       return;
+     }
+
+     // Add chip to empty tile
+     const newChipsPositions = {
+       ...chipsPositions,
+       [lastEmptyTileId]: playerTurn
+     };
+
+     // Change player turn
+     const newPlayerTurn = playerTurn === "red" ? "yellow" : "red";
+
+     // Calculate game status
+     const gameStatus = this.calculateGameStatus(newPlayerTurn, newChipsPositions);
+
+     // Save new state
+     this.setState({ chipsPositions: newChipsPositions, playerTurn: newPlayerTurn, gameStatus });
+   };
+
+   getLastEmptyTile(column: number) {
+     const { rows } = this.props;
+     const { chipsPositions } = this.state;
+
+     for (let row = rows - 1; row >= 0; row--) {
+       const tileId = `${row}:${column}`;
+       if (!chipsPositions[tileId]) {
+         return tileId;
+       }
+     }
+   }
+   ```
+
+   Take a couple of minutes to understand what we are doing here:
+
+   1. First, we need to get the last empty **Tile** of the column (from top to bottom) that the clicked Tile belongs to. We obtain the column number by parsing the `tileId`. Notice that by removing this code, we can place a chip on any tile, _but that will change the game rules_.
+   1. Then, we add a chip to the selected tile depending on the player's turn, known by the **App** component alone. And we recalculate the game status.
+   1. Last, we store all the new information in the component's state, re-rendering the entire application if something changed (React will take care of deciding this).
+
+1. Implement the `calculateGameStatus()` method by pasting the following code inside the **App** component. It contains the logic of the game to decide who the winner is, or who plays next. So we are going to skip the explanation.
 
 ```js
-{
-  type: 'ADD_SHOPPING_CART_ITEM',
-  payload: { id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }
-}
+calculateGameStatus = (playerTurn: string, chipsPositions: ChipsPositions): string => {
+  const { columns, rows } = this.props;
+
+  // Check four in a row horizontally
+  for (let row = 0; row < rows; row++) {
+    let repetitionCountStatus = { playerChip: "", count: 0 };
+
+    for (let column = 0; column < columns; column++) {
+      const chip = chipsPositions[`${row}:${column}`];
+
+      // If there is a chip in that position, and belongs to a player
+      // count that chip for that player (either increase the count or start over)
+      if (chip && chip === repetitionCountStatus.playerChip) {
+        repetitionCountStatus.count++;
+      } else {
+        repetitionCountStatus = { playerChip: chip, count: 1 };
+      }
+
+      // If the count for a player is 4, that player won
+      if (repetitionCountStatus.count === 4) {
+        return `Player ${repetitionCountStatus.playerChip} won!`;
+      }
+    }
+  }
+
+  // Check four in a row vertically
+  for (let column = 0; column < columns; column++) {
+    let repetitionCountStatus = { playerChip: "", count: 0 };
+
+    for (let row = 0; row < rows; row++) {
+      const chip = chipsPositions[`${row}:${column}`];
+
+      // If there is a chip in that position, and belongs to a player
+      // count that chip for that player (either increase the count or start over)
+      if (chip && chip === repetitionCountStatus.playerChip) {
+        repetitionCountStatus.count++;
+      } else {
+        repetitionCountStatus = { playerChip: chip, count: 1 };
+      }
+
+      // If the count for a player is 4, that player won
+      if (repetitionCountStatus.count === 4) {
+        return `Player ${repetitionCountStatus.playerChip} won!`;
+      }
+    }
+  }
+
+  // TODO: Check four in a row diagonally
+
+  return `It's ${playerTurn}'s turn`;
+};
 ```
 
-#### Result
-![](./assets/images/dispatch-from-browser.gif)
+> **Note:** Notice that this code does not check for four consecutive chips of the same value in diagonal. _Can you come up with an implementation for this? If you do, send it to me [as a Pull Request!](https://help.github.com/en/articles/creating-a-pull-request)_
 
-You can also generate a new node to store all the items your Shopping app could have by dispatching the following action:
+#### Initializing the app
 
-```js
-{
-  type: 'FETCH_ALL_ITEMS',
-  payload: [{ id: '100', name: 'Max the mule', price: 'free', imageUrl: 'https://swag.mulesoft.com/images/items/MU00-5000.jpg' }]
-}
-```
+1. Open the **src/components/index.ts** file and paste this line to expose the **App** component outside the **components** folder.
 
-#### Result
-![](./assets/images/redux-state-tree.png)
+   ```js
+   export { default as App } from "./App/App";
+   ```
 
-🎉🎉
+1. Now, open the **src/index.tsx** file and replace its content with the following code:
+
+   ```js
+   import React from "react";
+   import ReactDOM from "react-dom";
+   import { App } from "./components";
+   import "./index.css";
+
+   ReactDOM.render(<App columns={7} rows={6} />, document.getElementById("root"));
+   ```
+
+1. If you haven't done so yet, start the app by running `npm start` in a terminal.
+1. In the newly opened browser window, open the **Developer Console**, and then click the **Components** tab. You will see here the hierarchy tree of the React application, composed for an **App** component, a **Board** component with multiple **Column** components, and **Tile** components.
+1. Play with the game a little bit and then check the different **Tile**s of the board. Notice that the properties received will change when you interact with them.
+
+![Connect four board in the Developer's console](./assets/images/connect-four-developer-tools.png)
+
+> **Note:** You can also change a prop directly by modifying its value in the right panel. Try it yourself by turning a **Tile**'s chip type from `"red"` or `undefined` to `"yellow"`.
+
+Congratulations! You have created your first game with React and TypeScript 🎉
 
 ### Wrapping up
 
-In this section, we learned the following:
+In this exercise, we learned the following:
 
-* How to migrate from the local component state to Redux, by creating `actions` and `reducers`.
-* How to connect the Redux store with our components, through containers.
-* How to create new sync and async actions.
-* How to configure a Redux store in an app.
-* How to trigger new actions to the store.
+- How to create an application from scratch using React and TypeScript.
+- How to split your app's business logic into small components.
+- How to send information and notify user events via props.
+- How to use the React Developer tools to visualize your application's component tree and its state.
