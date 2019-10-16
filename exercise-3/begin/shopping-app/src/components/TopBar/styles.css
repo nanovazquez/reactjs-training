@@ -1,0 +1,19 @@
+.topbar {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: calc(100% - 50px);
+  padding: 0 25px;
+  height: 50px;
+  background-color: #d6eaf7;
+  box-shadow: 0 4px 2px -2px lightblue;
+}
+
+.topbar-left-panel {
+  flex: 1;
+}
+
+.topbar-right-panel {
+  flex: none;
+}

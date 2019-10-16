@@ -553,7 +553,9 @@ calculateGameStatus = (playerTurn: string, chipsPositions: ChipsPositions): stri
 
 > **Note:** You can also change a prop directly by modifying its value in the right panel. Try it yourself by turning a **Tile**'s chip type from `"red"` or `undefined` to `"yellow"`.
 
-Congratulations! You have created your first game with React and TypeScript 🎉
+Congratulations! You have created your first game with React and TypeScript
+
+🎉🎉
 
 ### Wrapping up
 

@@ -1,0 +1,31 @@
+.shopping-cart-status {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.shopping-cart-status:active {
+  transform: scale(.9);
+}
+
+.shopping-cart-status-logo {
+  font-size: 28px;
+}
+
+.shopping-cart-status-amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background-color: #00a2df;
+  color: white;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  border-radius: 50%;
+
+  position: relative;
+  top: 15px;
+  left: -15px;
+}

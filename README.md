@@ -28,7 +28,8 @@ The workshop is divided in four exercises:
 - [Understanding React and TypeScript](./exercise-1)
 - [Creating your first app with React and TypeScript](./exercise-2)
 - [Managing your application state with Redux](./exercise-3)
-- [Advanced topics](./exercise-4)
+- [Adding navigation to your app](./exercise-4)
+- [CI/CD + Advanced topics](./exercise-5)
 
 Each exercise has everything you need to start with inside the **begin** folder and the result we expect you to achieve inside the **end** folder.
 
