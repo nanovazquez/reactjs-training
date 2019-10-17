@@ -84,18 +84,21 @@ In this section, we will go through the steps needed to migrate from the local c
 1. Let's start by installing the packages we need. We'll go through all of them later, for now, just run `npm i -S redux react-redux redux-actions redux-thunk-promise`.
 1. And their definition files: `npm i -D @types/redux @types/react-redux @types/redux-actions`.
 
-   > **Note:** A definition file contains the types and declarations of a particular JS library that was not written in TypeScript. They are part of the [open-source project Definitely typed](https://github.com/DefinitelyTyped/DefinitelyTyped), maintained by the TS community that, as of today, has more than 4000 definition files.
-
-1. Now, create a folder named **domains** inside the **src** folder. We'll save all of our _data-domain related_ files there.
-1. Currently, we only need to store the current user ID and the user shopping cart items. For this, create a folder named **user** inside the **src/domain** folder. We will create **actions** and **reducers** that will take care of updating the user information based on UI interaction.
-
-![](./assets/images/redux-simplified.png)
+   > **Note:** A definition file contains the types and declarations of a particular JS library that was not written in TypeScript. They are part of the [open-source project Definitely typed](https://github.com/DefinitelyTyped/DefinitelyTyped), maintained by the TS community that, as of today, has 4000+ definition files.
 
 ### Actions and reducers
 
-1. We'll need to create some files to manage different responsibilities. We'll start by creating an **actions.ts** file for our app's actions creators. _What is an action creator?_ a function that returns/creates actions.
+Redux proposes the use of two new type of entities to organize our business logic:
 
-   Paste the following JS code inside the **src/domains/user/actions.ts** file. This code defines two actions, one sync and other async.
+- **Actions**, to connect the user interaction with the manipulation of the state. Actions will be "dispatched" when someone interacts with the application, sending the required information to do something about it.
+- **Reducers**: to generate a new state based on the information sent by an action. The return value of a reducer is stored in the Redux global state, amd it usually represents a little piece of our global state, a _node_.
+
+![](./assets/images/redux-simplified.png)
+
+Open the **src/domains** folder. In there, you should see a **user** folder, containing an **actions.ts** and **reducers.ts** file. This folder mimics our state tree. In the next steps, we are going to learn how to implement logic to store the user information in the Redux's **user node**, like the User ID or the Shopping Cart items.
+
+1. Open the **actions.ts** file.
+1. We are going to create two actions: an _async_ action to fetch items from the backend and _sync_ action to remove items from the user's shopping cart. For this, we are going to take advantage of the `createAction()` method of the "redux-actions" library, which only requires an _action type_ and, optionally, a function that will (eventually) return the payload of the action, named as _payload creator_:
 
    ```js
    import { createAction } from "redux-actions";
@@ -104,17 +107,23 @@ In this section, we will go through the steps needed to migrate from the local c
    const FETCH_SHOPPING_CART_ITEMS = "FETCH_SHOPPING_CART_ITEMS";
    const REMOVE_SHOPPING_CART_ITEM = "REMOVE_SHOPPING_CART_ITEM";
 
+   const fetchShoppingCartItems = createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getUserShoppingCartItems);
+   const removeShoppingCartItem = createAction(REMOVE_SHOPPING_CART_ITEM);
+
    export default {
      FETCH_SHOPPING_CART_ITEMS,
      REMOVE_SHOPPING_CART_ITEM,
-     fetchShoppingCartItems: createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getUserShoppingCartItems),
-     removeShoppingCartItem: createAction(REMOVE_SHOPPING_CART_ITEM)
+     fetchShoppingCartItems,
+     removeShoppingCartItem
    };
    ```
 
-   > **Note:** Actions are plain JavaScript objects that have a `type` property that indicates the type of action being performed. They are payloads of information that _dispatch_ (send) from your application to your store. You can learn more about actions [here](https://redux.js.org/basics/actions).
+   As you see, both synchronous and asynchronous actions are straightforward. The only difference is that, for async actions, you need to implement a function that returns a promise. And, when resolved, retrieves a payload, similarly to a sync action. We'll see how later.
 
-1. Next, we'll create the user's reducers. They are in charge of modeling our new app's state after receiving user action. Since we defined two actions, it makes sense to define two reducers. Paste the following code in a filed named **reducers.ts**, located inside the **src/domains/user** folder:
+   > **Note:** Actions are plain JavaScript objects that have a unique `type` property that identifies the action being performed. They are used to dispatch (or send) payloads of information to your store. You can learn more about actions [here](https://redux.js.org/basics/actions).
+
+1. Next, open the **reducers.ts** file.
+1. We now need to model our user's state node by defining the properties of this node. And the logic in charge of storing new information in these properties when an action is executed. Since we defined two actions, it makes sense to define two reducers:
 
    ```js
    import { handleActions } from 'redux-actions';
@@ -146,38 +155,23 @@ In this section, we will go through the steps needed to migrate from the local c
    }, initialState);
    ```
 
-   The important pieces of this code are:
+   These are the important pieces of this code:
 
-   - We define an initial state, similar to what we have in the `<App />` component.
-   - We don't mutate the state. Instead, we create a copy of it.
-   - We only change what we want to change. The rest remains the same.
+   - It defines an initial state, similar to what the `<App />` component defines as its internal state (if you haven't checked this component yet, take a look at it now).
+   - It doesn't mutate the state. Instead, it creates a copy of it. This is an important rule that you need to honor in the reducers.
+   - Although it does generate shallow copies of the state nodes (by using `...state`) only performs localized updates.
 
    > **Note:** Reducers specify how the application's state changes in response to actions sent to the store. Remember that actions only describe what happened, but don't model how the application's state changes. Find out more about them [here](https://redux.js.org/basics/reducers).
 
-1. Last, create an **index.ts** file inside the **src/domains** folder and paste the following code. This file wraps up everything we did to consume it easily from the outside.
+1. Last, open the **index.ts** file inside the **src/domains** folder. Notice that the code connects the `userReducers` object with the `user` propoerty. This is how we (later) tell Redux that the reducers we defined will only touch the user's node, receiving only this portion of the state and only allowed to update this portion of the state. As your app grows, you will create new state nodes with different _actions_ and _reducers_ associated with them.
 
-   ```js
-   import userActions from "./user/actions";
-   import userReducers from "./user/reducers";
+   > **Note:** If you follow this convention, you've probably noticed that for new state nodes you' only need to copy and paste the user's folder.
 
-   const actions = {
-     ...userActions
-   };
+### Removing the state from the App component
 
-   const reducers = {
-     user: userReducers
-   };
+As we moved the state logic into a different set of entities (actions and reducers), we can now simplify the `<App />` component by reducing its responsibilities. Let's start with its contract
 
-   export { actions, reducers };
-   ```
-
-   > **Note:** Did you notice that you are wrapping your user's reducers in the `user` property? This will be the state's node in which all the user information will go. Future state, like products or categories, would use different nodes. If you've followed this convention, you've probably noticed that you'll just only need to copy and paste the user's folder for that.
-
-### Refactoring the App component
-
-Next, we need to do some modifications to the `<App />` component. These changes will be mostly simplifications because we are moving the state management logic away from it.
-
-1. Open the **src/components/App/types.ts** file and replace the `IProps` and `IState` interfaces with the following code. Note that we are merging these two interfaces because we will receive everything via `props`, including the `actions`.
+1. Open the **src/components/App/types.ts** file and replace the `IProps` and `IState` interfaces with the following code. Note that we are merging these two interfaces because we will receive both the _state_ and the _actions_ via **props**.
 
    ```js
    export interface IProps {
@@ -188,11 +182,11 @@ Next, we need to do some modifications to the `<App />` component. These changes
    }
    ```
 
-1. Now, rename the **src/components/App/index.ts** file to **src/components/App/App.tsx** file. And apply the following changes to this file.
+1. Open the **src/components/App/App.tsx** file and apply the following changes to completely remove the state from this component:
 
    1. Replace the import of types with `import { IProps } from './types';`.
    1. Update the class definition with `class App extends React.Component<IProps, {}>`.
-   1. Notice that we are not using state anymore. Remove the line in the `constructor()` that initializes it. It should now look like the following:
+   1. Remove the line in the `constructor()` that initializes the state:
 
    ```js
    class App extends React.Component<IProps, {}> {
@@ -203,7 +197,18 @@ Next, we need to do some modifications to the `<App />` component. These changes
    }
    ```
 
-1. Then, replace the `handleRemoveShoppingCartItem()` method with the following code that simply fires an `action`:
+   1. Last, update from where it gets the shopping cart items in the `render()` method as it will now get them from **props**:
+
+   ```js
+   public render() {
+     const pages = this.getPages();
+     const { shoppingCartItems } = this.props;
+
+     ...
+   }
+   ```
+
+1. Modify the code inside the `handleRemoveShoppingCartItem()` method with code to execute an **action** (received via **props**).
 
    ```js
    public handleRemoveShoppingCartItem = (itemToRemoveId: string) => {
@@ -212,7 +217,7 @@ Next, we need to do some modifications to the `<App />` component. These changes
    }
    ```
 
-1. Repeat the same for the `componentDidMount()` method:
+1. Repeat the same for the `componentDidMount()` method. Remove the code that initializes the fetching of the shopping cart items with an execution of a function:
 
    ```js
    public componentDidMount() {
@@ -223,16 +228,13 @@ Next, we need to do some modifications to the `<App />` component. These changes
 
 1. The last part is to update from where we get the shopping cart items in the `render()` method. You can do that by simply changing that we are getting the values from `props` instead of `state`.
 
-   ```js
-     public render() {
-       const pages = this.getPages();
-       const { shoppingCartItems } = this.props;
+We are almost there!
 
-       ...
-     }
-   ```
+### Connecting the global state with the App component
 
-1. We are almost there! Now we need to create the file that wraps this component and enhances it, using the Redux state information. For this create a new file named **src/components/App/App.container.ts** and paste the following code:
+We now need to create the file that will enhance the `<App />` component by injecting the **state** and the **actions** that we created int he previous steps. These files are usually named **Container** components, and as you may remember, they store the intelligence (business logic) of your app.
+
+1. Create a new file named **src/components/App/App.container.ts** and paste the following code:
 
    ```js
    import { connect } from "react-redux";
@@ -255,37 +257,29 @@ Next, we need to do some modifications to the `<App />` component. These changes
    )(App);
    ```
 
-   Technically speaking, you created a container component. But ...isn't that what you have been doing? Yes and no. With Redux in place, the _container_ now is in charge of connecting your component to the state, by doing two separate (but yet simple) things:
+   In a Redux application, the **Container** component is only in charge of setting up all the information the (dumb) component requires to work. In most of the cases, it only means:
 
-   - Map the Redux state with the component's props.
-   - Map the Redux actions with the component's props. And dispatch them when executed.
+   - Mapping the Redux state with the component's props.
+   - Mapping the Redux actions with the component's props, and dispatching them when executed.
 
-   The rest is just sugar syntax to simplify the connection of your component with Redux.
+   The rest of the code is sugar syntax to simplify the connection of your component with Redux.
 
-   > **Note:** Create container components by connecting them when it's convenient. Whenever you feel like you're duplicating code in parent components to provide data for same kinds of children, time to extract a container. Generally, as soon as you feel a parent knows too much about “personal” data or actions of its children, time to create a container.
+   > **Note:** Create container components only when it's convenient for you, and use regular **state** by default. The rule of thumb is that when you feel that you're duplicating code in parent components by cascading props several times, it's time to use a container. Or when the number of props in a parent container grows too much.
 
-1. Before leaving the **App** folder, let's add an **src/components/App/index.ts** file to simplify the usage of this component from the outside. For this, paste the following code inside this newly created file:
+1. Last, update the **src/components/App/index.ts** file to expose the container to the outside instead of the component:
 
    ```js
-   import AppContainer from "./App.container";
-   export default AppContainer;
+   import App from "./App.container";
+   export default App;
    ```
 
 ### Configuring the Redux store
 
-The last step of the puzzle is the setup of React with Redux and the rest. For this, follow these steps:
+The last step of the puzzle is to initialize your app and connect it with Redux.
 
 1. Open the **src/index.tsx** file.
-1. Add the following `import` statements after the current ones. Most of them are from external libraries, but also notice that you are importing all the `reducers` of your application.
-
-   ```js
-   import { Provider } from "react-redux";
-   import { applyMiddleware, combineReducers, compose, createStore } from "redux";
-   import thunkPromiseMiddleware from "redux-thunk-promise";
-   import { reducers } from "./domains";
-   ```
-
-1. Next, create your store by passing your reducers and extend it with middlewares and developer tools
+1. Uncomment the code. Notice that we import the Redux library, other Reudx utilities and _all the reducers inside the domains folder_.
+1. Next, create your store by passing your reducers to the `createStore()` function, and extend it with middlewares and other developer tools:
 
    ```js
    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -310,15 +304,13 @@ The last step of the puzzle is the setup of React with Redux and the rest. For t
 
    > **Note:** A [Provider](https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store) is a container component that enables your presentational components to connect with the Redux store. It's the one that let's you receive both the `state` and `dispatch` in the `mapStateToProps()` and `mapDispatchToProps()` functions, respectively.
 
-And the migration is complete! 🚀🚀 If you followed all these steps, the application is now working the same way it was working before, but with Redux. Take a few minutes to analyze what you did, you could use the diagram below to understand how data flows in a Redux-powered application.
+And the migration is complete! The application is now working the same way it was working before, but with Redux 🚀🚀. Take a few minutes to play with the app and understand what how the data flows in a Redux-powered application.
 
 ![](./assets/images/redux-data-flow.png)
 
-### Section 3: Add new actions to the app
+## Section 3: Evolving your Redux app
 
-We are now going to add two simple actions: a sync action to add shopping items to the cart and an async action to fetch new items to shop. Of course, we'll mock the second action, as we don't have a backend set up for this Exercise.
-
-To do this, follow these steps:
+We are now going to extend the application functionality by creating two simple actions: a (sync) action to add items to the shopping cart and an (async) action to fetch new items to display. To do this, follow these steps:
 
 1. Open the **src/services/users-service.ts** file and add the following method to return all items. And don't forget also to export it.
 
@@ -329,6 +321,7 @@ To do this, follow these steps:
    ...
 
    function getAllItemsByUser(userId: string) {
+     // Of course, we'll mock this action, as we don't have a backend set up for this Exercise.
      return Promise.resolve(dummyProducts);
    }
 
@@ -344,14 +337,15 @@ To do this, follow these steps:
    ...
    const ADD_SHOPPING_CART_ITEM = 'ADD_SHOPPING_CART_ITEM';
    const FETCH_ALL_ITEMS = 'FETCH_ALL_ITEMS';
+   const fetchAllItems = createAction(FETCH_ALL_ITEMS);
+   const addShoppingCartItem = createAction(ADD_SHOPPING_CART_ITEM);
 
    export default {
      ADD_SHOPPING_CART_ITEM,
      FETCH_ALL_ITEMS,
      ...
-     addShoppingCartItem: createAction(ADD_SHOPPING_CART_ITEM),
-     fetchAllItems: createAction(FETCH_SHOPPING_CART_ITEMS, usersService.getAllItemsByUser),
-     ...
+     fetchAllItems,
+     addShoppingCartItem
    };
    ```
 
