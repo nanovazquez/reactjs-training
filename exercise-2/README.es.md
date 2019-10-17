@@ -16,7 +16,7 @@ En estos pasos, vamos a instalar la aplicación de Facebook [Create React app](h
 
 1. En tu terminal, corre el comando `npx create-react-app connect-four --typescript`. Este comando va a crear una aplicacion Typescript dentro de la carpeta **connect-four**.
 
-> **Note:** Si `npx` no funciona, proba con `npm i -g create-react-app` seguido de `create-react-app connect-four --typescript`.
+> **Nota:** Si `npx` no funciona, proba con `npm i -g create-react-app` seguido de `create-react-app connect-four --typescript`.
 
 1. Espera a que se complete el proceso. Deberías ver un mensaje similar a este:
 
@@ -24,31 +24,31 @@ En estos pasos, vamos a instalar la aplicación de Facebook [Create React app](h
 
 1. Navega la carpeta **connect-four** que se acaba de crear y tomate un minuto o dos para analizar la estructura de la carpeta. Estás viendo una aplicación totalmente funcional con lógica de negocios dentro de la carpeta **src**:
 
-```
-  connect-four
-  ├── node_modules
-  │   ├── ...
-  ├── public
-  │   ├── favicon.ico
-  │   ├── index.html
-  │   └── manifest.json
-  │   └── ...
-  ├── src
-  │   ├── App.css
-  │   ├── App.test.tsx
-  │   ├── App.tsx
-  │   ├── index.css
-  │   ├── index.tsx
-  │   ├── logo.svg
-  │   └── react-app-env.d.ts
-  │   └── serviceWorker.ts
-  ├── .gitignore
-  ├── package-lock.json
-  ├── package.json
-  ├── README.md
-  ├── tsconfig.json
-  └── ...
-```
+   ```
+   connect-four
+   ├── node_modules
+   │   ├── ...
+   ├── public
+   │   ├── favicon.ico
+   │   ├── index.html
+   │   └── manifest.json
+   │   └── ...
+   ├── src
+   │   ├── App.css
+   │   ├── App.test.tsx
+   │   ├── App.tsx
+   │   ├── index.css
+   │   ├── index.tsx
+   │   ├── logo.svg
+   │   └── react-app-env.d.ts
+   │   └── serviceWorker.ts
+   ├── .gitignore
+   ├── package-lock.json
+   ├── package.json
+   ├── README.md
+   ├── tsconfig.json
+   └── ...
+   ```
 
 1. Ejecuta `npm start`. Este comando ejecuta la aplicación en modo de desarrollo, proporcionando una recarga automática si realiza cambios en el código (a.k.a. [Hot Module replacement](https://webpack.js.org/concepts/hot-module-replacement/)).
 1. Visita http://localhost:3000 para ver la aplicación corriendo en el navegador.
@@ -64,19 +64,19 @@ Creaste tu primera aplicacion con React y Typescript
 
 1. Tomate un par de minutos para analizar el código de este archivo:
 
-  - En la parte superior, tenes algunas declaraciones `import`. Esta es la forma en que JavaScript (ES6) importa módulos al código. El valor importado se almacena dentro de una variable para su uso posterior. Podes obtener más información sobre los _imports_ de ES6 [aquí](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import).
-  - _Linea 5_ define un componente funcional React llamado `App`. Devuelve el código JSX que el navegador dibuja (después de compilar). Recuerde que los componentes React nos ayudan a dividir nuestro código en partes pequeñas, siguiendo [SRP](https://en.wikipedia.org/wiki/Single_responsibility_principle).
-  - Entre las líneas 6 y 23 hay código JSX que renderiza lo que vimos antes en el navegador. Observe que es casi idéntico al HTML, excepto _linea 9_ que configura la prop _src_ utilizando una referencia de variable de JavaScript (`<img src = {logo} .. />`)
-  - Por último, _linea 26_ exporta nuestra función `<App />` para que esté disponible para su uso en otros lugares.
+   - En la parte superior, tenes algunas declaraciones `import`. Esta es la forma en que JavaScript (ES6) importa módulos al código. El valor importado se almacena dentro de una variable para su uso posterior. Podes obtener más información sobre los _imports_ de ES6 [aquí](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import).
+   - _Linea 5_ define un componente funcional React llamado `App`. Devuelve el código JSX que el navegador dibuja (después de compilar). Recuerde que los componentes React nos ayudan a dividir nuestro código en partes pequeñas, siguiendo [SRP](https://en.wikipedia.org/wiki/Single_responsibility_principle).
+   - Entre las líneas 6 y 23 hay código JSX que renderiza lo que vimos antes en el navegador. Observe que es casi idéntico al HTML, excepto _linea 9_ que configura la prop _src_ utilizando una referencia de variable de JavaScript (`<img src = {logo} .. />`)
+   - Por último, _linea 26_ exporta nuestra función `<App />` para que esté disponible para su uso en otros lugares.
 
 
 1. Con la aplicación ejecutándose localmente (si la deteniste, ejecuta `npm start` en la terminal), modifica el código eliminando la _linea 17_ y guarda tus cambios. Tene en cuenta que:
 
-  - El IDE muestra un error:
+   - El IDE muestra un error:
 
 ![](./assets/images/ts-ide-error.png)
 
-  - El navegador también muestra el error de compilación:
+   - El navegador también muestra el error de compilación:
 
 ![](./assets/images/ts-browser-error.png)
 
@@ -110,7 +110,7 @@ Recuerde que los navegadores **solo entienden HTML, JS y CSS**. Esta aplicación
 
 ### Cómo agregar nuevos componentes
 
-Ahora que entendemos las bases de nuestra aplicación, es hora de agregar la lógica del juego. Como explicamos en el [Exercise 1](../exercise/1), las aplicaciones React dividen la lógica de negocios en diferentes componentes. Pero hay diferentes responsabilidades en una aplicación. Utilizaremos un patrón ampliamente conocido, [Presentational and Container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0), para organizar nuestros componentes en una estructura simple, pero potente:
+Ahora que entendemos las bases de nuestra aplicación, es hora de agregar la lógica del juego. Como explicamos en el [Ejercicio 1](../exercise/1), las aplicaciones React dividen la lógica de negocios en diferentes componentes. Pero hay diferentes responsabilidades en una aplicación. Utilizaremos un patrón ampliamente conocido, [Presentational and Container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0), para organizar nuestros componentes en una estructura simple, pero potente:
 
 ![React Data Flow](./assets/images/react-data-flow.png)
 
@@ -289,7 +289,7 @@ export default class Column extends React.PureComponent<Props> {
 
   Este código le dice al que use al componente que:
 
-  - Tiene que proporcionar el número de `columns` y` rows` que tendrá el tablero.
+  - Tiene que proporcionar el número de `columns` y `rows` que tendrá el tablero.
   - Tiene que enviar el objeto `chipsPositions`. Esta información es utilizada por el componente **Column**, no por el **Board**.
   - Tiene que proporcionar una función `onTileClick`, que será utilizada por el componente **Tile** para señalar cuando se hace click.
 
