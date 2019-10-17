@@ -2,9 +2,9 @@
 
 In this exercise, we will introduce the two core libraries that we will use to develop web applications: [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/). For this, we'll go through small but concrete examples that will help us to understand the main concepts, one at a time.
 
-But before starting to code, we need to analyze what we are going to do. Think about the most common UI layout you've seen, and ask yourself the following questions:
+But before starting to code, we need to understand what we are going to do. Think about the most common user interface (UI) layout you've seen, and ask yourself:
 
-1. If I have to implement this, where should I start? Is there something out there that I can use?
+1. If I have to make this, where should I start? Do I have to do all by myself? Is there something out there that I can use?
 1. How can I split the work into different tasks? What are the most important ones?
 1. Is it possible to reuse what I'm going to do with other or future projects?
 
