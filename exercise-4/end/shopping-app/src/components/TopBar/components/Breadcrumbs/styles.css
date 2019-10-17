@@ -1,0 +1,21 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs-logo {
+  width: 35px;
+  margin-right: 20px;
+}
+
+.breadcrumbs-link:last-child {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.breadcrumbs-separator:after {
+  content: ' > ';
+  margin: 0 10px;
+}

@@ -259,6 +259,8 @@ Let's see how TypeScript works using an example:
 
    Fix the issue by replacing the number `1` with a string value (like `"helado"`).
 
+🎉
+
 #### Wrapping up
 
 With this simple example, we've learned that:
