@@ -23,7 +23,7 @@ Quien participe debera instalar:
 - [Visual Studio Code](https://code.visualstudio.com/).
 - [Redux devtools instaladas en tu browser](https://github.com/zalmoxisus/redux-devtools-extension#installation).
 
-## Exercises
+## Ejercicios
 
 El taller se divide en cuatro ejercicios:
 

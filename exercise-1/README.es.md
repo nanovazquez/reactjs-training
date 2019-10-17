@@ -116,18 +116,18 @@ Como dijimos antes, React es una libreria que nos ayudará a construir nuestra i
 
 1. El método propio `tick()` actualiza el estado del componente llamando a `this.setState()`.
 
-   ```js
-   export default class Timer extends React.Component {
+  ```js
+  export default class Timer extends React.Component {
 
-     ...
+    ...
 
-     tick() {
-       this.setState(prevState => ({ seconds: prevState.seconds + 1 }));
-     }
+    tick() {
+      this.setState(prevState => ({ seconds: prevState.seconds + 1 }));
+    }
 
-     ...
-   }
-   ```
+    ...
+  }
+  ```
 
 
   Cada componente de React puede almacenar su estado local via `this.state`. **State** es similar a las _props_, pero es privado y está completamente controlado por el componente. **El estado NO DEBE modificarse directamente**. En su lugar, siempre debe utilizar el método `this.setState ()` y devolver un nuevo estado.
@@ -160,13 +160,13 @@ Como dijimos antes, React es una libreria que nos ayudará a construir nuestra i
 1. Tomate unos minutos para analizar todas las piezas de código involucradas y la responsabilidad de cada una de ellas. Juga con las casillas de verificación y revisa los resultados.
 1. Abri **Question.jsx** y **Answer.jsx**: Se puede ver que estos archivos modelan una función React (o un componente funcional React) que recibe diferentes _props_ y devuelve un resultado, modelado a través de JSX.
 
-   ```js
-   export default ({ question, value }) => (
-     <p>
-       <span>{`${question}: ${value}`}</span>
-     </p>
-   );
-   ```
+  ```js
+  export default ({ question, value }) => (
+    <p>
+      <span>{`${question}: ${value}`}</span>
+    </p>
+  );
+  ```
 
 1. Abri **Questionnaire.jsx**. Mira los métodos utilizados al dibujar las diferentes partes del componente: las preguntas y las respuestas. Observe cómo organizamos toda la lógica de dibujo utilizando el método `render()`.
 
@@ -174,32 +174,33 @@ Como dijimos antes, React es una libreria que nos ayudará a construir nuestra i
 
 1. Concentrémonos en el método `renderQuestions()` y localicemos la prop `onChange`. Pasamos a esta prop el método `this.handleQuestionChanged()` que actualizará la UI si se responde la pregunta. Y almacenará el valor en el estado del componente (Questionnaire).
 
-   ```js
-   export default class Questionnaire extends React.PureComponent {
-
-     ...
-
-     renderQuestions() {
-       if (!questions.length) {
-         return null;
-       }
-
-       return questions.map(question => (
-         <Question
-           key={question.id}
-           id={question.id}
-           text={question.text}
-           checked={question.value}
-           onChange={this.handleQuestionChanged}
-         />
-       ));
-     }
+  ```js
+  export default class Questionnaire extends React.PureComponent {
 
     ...
+
+    renderQuestions() {
+      if (!questions.length) {
+        return null;
+      }
+
+      return questions.map(question => (
+        <Question
+          key={question.id}
+          id={question.id}
+          text={question.text}
+          checked={question.value}
+          onChange={this.handleQuestionChanged}
+        />
+      ));
+    }
+
+  ...
+
   }
   ```
 
-  Algo para destacar es que la forma en que manejamos la interacción del usuario (a través de _"eventos"_) de una manera similar al código simple JS:
+  Algo para destacar es que la forma en que manejamos la interaccion del usuario (a través de _"eventos"_) de una manera similar al código simple JS:
 
   - Todos los elementos JSX exponen un conjunto de eventos (ver todos los eventos compatibles [aquí](https://reactjs.org/docs/events.html#supported-events)).
   - Podemos _hookearnos_ a cada evento adjuntándole una función. De manera predeterminada, recibirá un objeto [SyntheticEvent](https://reactjs.org/docs/events.html) como primer argumento, pero [se puede cambiar](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
