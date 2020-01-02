@@ -1,5 +1,7 @@
 ![](https://www.valuecoders.com/blog/wp-content/uploads/2016/08/react.png)
 
+![](./logo.png)
+
 # ReactJS Training
 
 This training intends to introduce web development using the ReactJS ecosystem to any developer. It consists of different exercises that focus on specific topics that will be learned while coding. You can find the slides that introduce the training [here](https://docs.google.com/presentation/d/1iB-UDYZbJEOfXmJJ3kj-EklgE_rDcAo-eVZO7fFVcN8/edit#slide=id.g3ec7f0c99c_0_9).
