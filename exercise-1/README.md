@@ -1,6 +1,6 @@
 # Understanding React and TypeScript
 
-In this exercise, we will introduce the two core libraries that we will use to develop web applications: [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/). For this, we'll go through small but concrete examples that will help us to understand the main concepts, one at a time.
+In this Exercise, we will introduce the two core libraries that we will use to develop web applications: [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/). For this, we'll go through small but concrete examples that will help us to understand the main concepts, one at a time.
 
 But before starting to code, we need to understand what we are going to do. Think about the most common user interface (UI) layout you've seen, and ask yourself:
 
@@ -12,9 +12,9 @@ But before starting to code, we need to understand what we are going to do. Thin
 
 In the next sections, we will work together to propose answers to these questions.
 
-## Introduction: web-based development
+## Introduction: web application development
 
-Before starting, let's do a quick recap of the foundational concepts of web development. If you know about them, you can skip this part and jump directly to Section 1.
+Before starting, let's do a quick recap of the foundational concepts of web development. If you know them, you can skip this part and jump directly to Section 1.
 
 - Web applications are, basically, applications that can be executed by a (web) browser (Chrome, Firefox, Edge, Safari, Internet Explorer, etc.).
 - Web browsers only understand HTML, JavaScript and CSS.
@@ -59,7 +59,7 @@ The way we split our layout into components is entirely arbitrary and, although 
 Like we said before, React is a library that will help us to build our UI by splitting it into components. Let's figure out together what the above means by checking the following examples (from the ReactJS documentation):
 
 1. Open the **Hello React!** example by clicking [here](https://codesandbox.io/s/hello-react-lbisk).
-1. Take a few minutes to analyze the code. Notice that the App componet is a React function only returning _JSX syntax_.
+1. Take a few minutes to analyze the code. Notice that the `<App/>` component is a _React function_ that only returns _JSX syntax_.
 
    > **What is JSX?** JSX is the de-facto syntax extension to render HTML elements in the React ecosystem. It's not HTML, but the syntax is pretty similar. It may remind you of a template language, but it also comes with the full power of JavaScript. If you want to learn more about JSX, see [here](https://reactjs.org/docs/introducing-jsx.html).
 
@@ -74,26 +74,28 @@ Like we said before, React is a library that will help us to build our UI by spl
    ReactDOM.render(React.createElement(App, null), rootElement);
    ```
 
-1. We will now modify the example by providing the ability to customize the message rendered by the application. Replace the hardcoded message with a `message` property (of an object argument) that you will set when configuring the React component. In short:
+1. We will now modify this example by providing the ability to customize the message rendered by the application. Replace the hardcoded message with a `message` property (of an object argument) that you will set when configuring the React component.
 
-   1. Provide a `message` property to the `App` component:
+1. We will now modify the example by providing to the <App/> component the ability to customize the message rendered. For this:
 
-      ```js
-      ReactDOM.render(<App message="Hello React!!" />, rootElement);
-      ```
-
-   1. Update the App component definition with the following code:
+   1. Replace the hardcoded message with a `message` parameter sent to the component.
 
       ```js
       const App = ({ message }) => <h1>{message}</h1>;
       ```
 
+   1. Provide a customized message when initializing App component (like `Hello React!!`):
+
+      ```js
+      ReactDOM.render(<App message="Hello React!!" />, rootElement);
+      ```
+
    React functions can receive arbitrary, read-only input named **props** (short for _properties_). These **props**, model what the function returns. For instance, in our previous example, the message we output in the browser depends on the `message` property.
 
-   > **Note:** As a general rule, all React functions & components must act as _pure functions_ with respect to their props. Meaning that what they return (or render) in the browser is determined by its input values, but without mutating the arguments received (also known as a _"side effect"_).
+   > **Note:** As a general rule, all React functions & components must act as _"pure functions"_ with respect to their props. Meaning that what they return (or render) in the browser is determined by its input values, but without mutating the parameters arguments received (also known as a _"side effect"_).
 
 1. Let's move to another example. Open the **React Timer** example by clicking [here](https://codesandbox.io/s/react-timer-2y4k8).
-1. The code looks more complicated now, take a few minutes to review it. Notice that we now have two files: an _index.jsx_ file that initializes our app and a _Timer.jsx_ file that defines a React component. This component is a class that extends from `React.Component`, has a `constructor()` and four other methods.
+1. Notice that we now have two files: an _index.jsx_ file that initializes our app and a _Timer.jsx_ file that defines a React component. This component is a class that extends from `React.Component`, has a `constructor()` and four other methods.
 
    ```js
    export default class Timer extends React.Component {
@@ -111,30 +113,11 @@ Like we said before, React is a library that will help us to build our UI by spl
    }
    ```
 
-   React lets you define components as classes or functions. When you extend from **React.Component**, the only requirement is to define a **render()** method, responsible for returning the JSX elements that will be displayed in the browser. Additionally, a React class component provides other built-in methods that are executed at particular (but specific) times. You can **hook** your own code to these [lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle) by just implementing them. Some of these methods are the `constructor()`, `componentWillMount()`, `componentWillUnmount()`, but there are others.
+   React lets you define components as classes or functions. When you extend from **React.Component**, the only requirement is to define a **render()** method, responsible for returning the JSX elements that will be displayed in the browser. Additionally, a React class component provides other built-in methods that are executed at specific times while your app is running, and you can **hook** your own code to these [lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle). Some of these methods are the `constructor()`, `componentWillMount()`, `componentWillUnmount()`.
 
    > **Note:** The **render()** method is an equivalent of the React function that we used in the previous example.
 
-1. Now, notice that the custom `tick()` method in updates the component's state by calling `this.setState()`.
-
-   ```js
-   export default class Timer extends React.Component {
-
-     ...
-
-     tick() {
-       this.setState(prevState => ({ seconds: prevState.seconds + 1 }));
-     }
-
-     ...
-   }
-   ```
-
-   Every React Component could store its local state in `this.state`. **State** is similar to props, but it is private and fully controlled by the component. **The state MUST NOT be modified directly**. Instead, you should always the `this.setState()` method and return a new state.
-
-   > **Note:** The reason why you should not mutate the state directly is that a state update could _potentially_ trigger a new execution of the `render()` method, redrawing the component. If you use `this.setState()` React will make this call for you, along with other calculations.
-
-1. Last, check the code inside the `componentDidMount()` and `componentWillUnmount()`. This code is in charge of initializing, executing and cleaning up the timer. And by using these two built-in methods, React guarantees to execute your code when the component is rendered in the DOM ("mounted" ) and when it is removed from the DOM ("unmounted".
+1. Check the code inside the `componentDidMount()` and `componentWillUnmount()`. This code is in charge of initializing, executing and cleaning up the timer. And by using these two built-in methods, React guarantees to execute your code when the component is rendered in the DOM ("mounted") and when it is removed from the DOM ("unmounted").
 
    ```js
    export default class Timer extends React.Component {
@@ -153,7 +136,26 @@ Like we said before, React is a library that will help us to build our UI by spl
    }
    ```
 
-   > **Note:** If you want to know more about state and lifecycle, see [here](https://reactjs.org/docs/state-and-lifecycle.html)
+   > **Note:** If you want to know more about state and lifecycle, see [here](https://reactjs.org/docs/state-and-lifecycle.html).
+
+1. Finally, let's review the last method. The custom `tick()` method updates the component's state by calling `this.setState()`.
+
+   ```js
+   export default class Timer extends React.Component {
+
+     ...
+
+     tick() {
+       this.setState(prevState => ({ seconds: prevState.seconds + 1 }));
+     }
+
+     ...
+   }
+   ```
+
+   Every React Component could store its local state in `this.state`. **State** is similar to props, but it is private and fully controlled by the component. **The state MUST NOT be modified directly**. Instead, you should always the `this.setState()` method and return a new state.
+
+   > **Note:** The reason why you should not mutate the state directly is that a state update could _potentially_ trigger a new execution of the `render()` method, redrawing the component. If you use `this.setState()` React will make this call for you, along with other calculations.
 
 1. We are now in the last example of the section. Open the **Questionnaire** example by clicking [here](https://codesandbox.io/s/react-questionnaire-4che1).
 1. Take a few minutes to analyze all the pieces of code involved and the responsibility of each one of them. Then, play with the checkboxes and see the results.
@@ -169,9 +171,32 @@ Like we said before, React is a library that will help us to build our UI by spl
 
 1. Open the **Questionnaire.jsx** file. Take a look at the methods used by rendering the different pieces of the component: the questions and the answers. Notice how we orchestrate all the drawing logic using the `render()` method.
 
+   ```js
+   export default class Questionnaire extends React.PureComponent {
+     ...
+
+     renderQuestions() {
+       ...
+     }
+
+     renderAnswers() {
+       ...
+     }
+
+     render() {
+       return (
+         <React.Fragment>
+           {this.renderQuestions()}
+           {this.renderAnswers()}
+         </React.Fragment>
+       );
+     }
+   }
+   ```
+
    > **Note:** React Fragment is a built-in component used to (logically) group a list of children without adding extra nodes to the DOM. If you want to learn more about it, click [here](https://reactjs.org/docs/fragments.html).
 
-1. Now, focus on the `renderQuestions()` method and locate the `onChange` prop. We pass to this prop a `this.handleQuestionChanged()` method that will update the UI if the question is answered. And will store the value in the (Questionnaire) component's state.
+1. Focus on the `renderQuestions()` method. Notice that we pass to the `onChange` prop a `this.handleQuestionChanged()` method that will update the UI if the question is answered, and will store the value in the (Questionnaire) component's state.
 
    ```js
    export default class Questionnaire extends React.PureComponent {
@@ -198,10 +223,10 @@ Like we said before, React is a library that will help us to build our UI by spl
    }
    ```
 
-   Observe that the way we handle the user interaction (via _"events"_) in a similar fashion plain JS code does:
+   In React, we handle the user interaction via _"events"_, in a similar fashion plain JS and HTML code does:
 
-- All JSX elements expose a set of events (see all supported events [here](https://reactjs.org/docs/events.html#supported-events)).
-- We can hook up to each event by attaching a function to it. By default, it will receive a [SyntheticEvent](https://reactjs.org/docs/events.html) object as the first argument, but [you can change this](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
+   - All JSX elements expose a set of events (see all supported events [here](https://reactjs.org/docs/events.html#supported-events)).
+   - We can hook up to each event by attaching a function to it. By default, it will receive a [SyntheticEvent](https://reactjs.org/docs/events.html) object as the first argument, but [you can change this](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
 
 #### Wrapping up
 
@@ -224,14 +249,14 @@ By reviewing these examples, we learned the following:
 
 In essence, it's a strict syntactical superset of JavaScript that adds optional static typing to the language **at development time**.
 
+![](./assets/images/typescript-intro.png)
+
 The main benefits of using this library are:
 
 - It has static checking and code refactoring and a broad set of highly-productive development tools and practices.
 - It lets you write code using the latest features and syntax, without worrying about the browser support (because it will compile to plain JS).
 - It won't force you to use TypeScript: you can write JavaScript if you want.
 - Microsoft and Google maintain it. And Angular uses it.
-
-![](./assets/images/typescript-intro.png)
 
 ### TypeScript in action
 
@@ -245,21 +270,23 @@ Let's see how TypeScript works using an example:
    - In the right panel, you can visualize the JavaScript equivalent, that was generated by transpiling the TypeScript code to ES2017. This is the code that the browser understands and can run.
    - Similarly, there is TypeScript code on the left that defines the `FoodTruck` class, and a method to welcome new clients.
 
-1. Now, put the mouse over the `FoodTruck` instantiation on _line 47_. Notice that the IDE displays information about its constructor.
+1. Mouse over the `FoodTruck` instantiation on _line 47_. Notice that the IDE displays information about its constructor.
 
    ![](./assets/images/foodtruck-constructor.png)
 
-1. Add a second argument to instantiate a `FoodTruck`, like `"asado"`. Now, open the Developer console (or Developer tools) of your browser by right-clicking the page (but outside of the Editor, like in the blue navbar at the top). Then, click the **Run** button. Hey! Our change is not shown in the console, that's not fair. To make it work, either add a `console.log(nameOnlyTruck.greet());` on _line 48_ or replace the _line 54_ with the `nameOnlyTruck` instance. And then click **Run** again.
+1. Add a second argument to instantiate a `FoodTruck`, like `"asado"`. Now, open the Developer console (or Developer tools) of your browser by right-clicking the page (but outside of the Editor, like in the blue navbar at the top). Then, click the **Run** button.
+
+   Hey! Our change is not shown in the console, that's not fair. To make it work, either add `console.log(nameOnlyTruck.greet());` on _line 48_ or replace the _line 54_ with the `nameOnlyTruck` instance. And then click **Run** again.
 
    > **Note:** Every modern web browser includes a powerful suite of developer tools that help developers to understand what the browser interprets and find possible bugs in the code (HTML, JavaScript or CSS). It also shows you metrics like how long the page took to load and every other request the browser made (and is doing). If you want to deep dive on this, click [here](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_are_browser_developer_tools).
 
-1. Finally, replace the string `"asado"` with the number `1`. Now there is an error in the code telling you that numbers are not allowed as arguments of the constructor. Notice that this is shown in TypeScript and not in JavaScript.
+1. Finally, replace the string `"asado"` with the number `1`. Now there is an error in the code telling you that "numbers are not allowed as arguments of the constructor". Notice that this is shown in the TypeScript panel and not in JavaScript (the right panel).
 
    ![](./assets/images/foodtruck-constructor-error.png)
 
-   Fix the issue by replacing the number `1` with a string value (like `"helado"`).
+1. Fix the issue by replacing the number `1` with a string value (like `"helado"`).
 
-🎉
+And that's it! 🎉
 
 #### Wrapping up
 
