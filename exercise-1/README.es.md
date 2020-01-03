@@ -275,7 +275,7 @@ Veamos cómo funciona TypeScript usando un ejemplo:
 
 1. Coloque el mouse sobre la instanciación `FoodTruck` en la _linea 47_. Observe que el IDE muestra información sobre su constructor.
 
-![](./assets/images/foodtruck-constructor.png)
+   ![](./assets/images/foodtruck-constructor.png)
 
 1. Agregue un segundo argumento para crear una instancia de `FoodTruck`, por ejemplo `"asado"`. Abra la consola del desarrollador (o _Developer tools_) del navegador haciendo click derecho en la página (pero fuera del editor, por ejemplo en la barra de navegación azul en la parte superior). Luego, haz click en el botón **Run**.
 
