@@ -263,9 +263,11 @@ Los principales beneficios de usar esta libreria son:
 
 Veamos cómo funciona TypeScript usando un ejemplo:
 
-1. Abri el [playgrund de TypeScript](http://www.typescriptlang.org/play/). Este playground usa las mismas herramientas que el IDE de VSCode usa para interpretar el código.
-1. En el menú desplegable ubicado a la izquierda de la página, seleccione la opción [Hello world](http://www.typescriptlang.org/play/?target=1&e=178#example/hello-world). Tomate un tiempo para leer detenidamente el código y comprender qué es TypeScript y qué hace. Si queres, continua con los otros ejemplos de la sección _JavaScript Essentials_.
-1. Ahora abri el ejemplo [Classes 101](http://www.typescriptlang.org/play/?e=155#example/classes-101). Repasemos juntos:
+1. Abre el [playgrund de TypeScript](http://www.typescriptlang.org/play/). Este playground usa las mismas herramientas que el IDE de VSCode usa para interpretar el código.
+1. En el menú desplegable ubicado a la izquierda de la página, selecciona la opción [Hello world](http://www.typescriptlang.org/play/?target=1&e=178#example/hello-world). Tómate un tiempo para leer detenidamente el código y comprender qué es TypeScript y qué hace. Si queres, continua con los otros ejemplos de la sección _JavaScript Essentials_.
+1. Ahora abre el ejemplo [Classes 101](http://www.typescriptlang.org/play/?e=155#example/classes-101). Repasémoslo juntos:
+
+   ![](./assets/images/ts-classes-101.png)
 
    - En el panel izquierdo, hay código TypeScript que define la clase `Vendor` y un método para recibir clientes en la tienda, identificado por su nombre.
    - En el panel derecho, puede visualizar el equivalente de JavaScript, que se generó al transpilar el código TypeScript a ES2017. Este es el código que el navegador entiende y puede ejecutar.
