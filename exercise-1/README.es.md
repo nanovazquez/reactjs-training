@@ -226,6 +226,8 @@ Como dijimos antes, React es una libreria que nos ayudará a construir nuestra i
 
    Con React, manejamos la interaccion del usuario a través de _"eventos"_ de una manera similar al si sólo utilizáramos JavaScript y HTML:
 
+   ![React events](./assets/images/react-data-flow.png)
+
    - Todos los elementos JSX exponen un conjunto de eventos (ver todos los eventos compatibles [aquí](https://reactjs.org/docs/events.html#supported-events)).
    - Podemos _hookearnos_ a cada evento enviándoles una función. De manera predeterminada, recibirá un objeto [SyntheticEvent](https://reactjs.org/docs/events.html) como primer argumento, pero esto [se puede cambiar](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
 
@@ -240,9 +242,7 @@ Al revisar estos ejemplos, aprendimos lo siguiente:
 1. Cada componente React podría tener su propio **state** para almacenar valores localmente.
 1. Puede capturar las interacciones del usuario _hookeando_ una función o método de clase a un **evento JSX** .
 
-![React events](./assets/images/react-events.png)
-
-> **Nota:** Podes encontrar un conjunto completo de ejemplos, cada uno centrado en un solo concepto de React, en la [documentación oficial](https://reactjs.org/docs/hello-world.html).
+> **Nota:** Puedes encontrar un conjunto completo de ejemplos, cada uno centrado en un solo concepto de React, en la [documentación oficial](https://reactjs.org/docs/hello-world.html).
 
 ## Seccion 2: Que agrega TypeScript a la mezcla
 

@@ -225,6 +225,8 @@ Like we said before, React is a library that will help us to build our UI by spl
 
    In React, we handle the user interaction via _"events"_, in a similar fashion plain JS and HTML code does:
 
+   ![React events](./assets/images/react-data-flow.png)
+
    - All JSX elements expose a set of events (see all supported events [here](https://reactjs.org/docs/events.html#supported-events)).
    - We can hook up to each event by attaching a function to it. By default, it will receive a [SyntheticEvent](https://reactjs.org/docs/events.html) object as the first argument, but [you can change this](https://reactjs.org/docs/handling-events.html#passing-arguments-to-event-handlers).
 
@@ -232,14 +234,12 @@ Like we said before, React is a library that will help us to build our UI by spl
 
 By reviewing these examples, we learned the following:
 
-1. In React, we usually use **JSX** to describe what the UI should look like.
-1. To customize what we output, we can send **props** to our React functions or components.
-1. React provides the **React.Component** class to help to encapsulate our code in components.
-1. The output of a **render()** method of a **React.Component** tells the browser what we want to draw.
-1. Each React component could have its own **state** to store values locally.
-1. You can capture user interactions by hooking a function or class method to a JSX **events**.
-
-   ![React events](./assets/images/react-events.png)
+- In React, we usually use **JSX** to describe what the UI should look like.
+- To customize what we output, we can send **props** to our React functions or components.
+- React provides the **React.Component** class to help to encapsulate our code in components.
+- The output of a **render()** method of a **React.Component** tells the browser what we want to draw.
+- Each React component could have its own **state** to store values locally.
+- You can capture user interactions by hooking a function or class method to a JSX **events**.
 
 > **Note:** You can find a complete set of examples, each one focused on a single React concept, in the [React documentation](https://reactjs.org/docs/hello-world.html).
 
