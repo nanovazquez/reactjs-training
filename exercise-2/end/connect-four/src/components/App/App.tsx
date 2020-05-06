@@ -12,53 +12,65 @@ export default class App extends React.PureComponent<Props, State> {
   };
 
   calculateGameStatus = (playerTurn: string, chipsPositions: ChipsPositions): string => {
+    
     const { columns, rows } = this.props;
 
     // Check four in a row horizontally
     for (let row = 0; row < rows; row++) {
-      let repetitionCountStatus = { playerChip: "", count: 0 };
 
       for (let column = 0; column < columns; column++) {
-        const chip = chipsPositions[`${row}:${column}`];
-
-        // If there is a chip in that position, and belongs to a player
-        // count that chip for that player (either increase the count or start over)
-        if (chip && chip === repetitionCountStatus.playerChip) {
-          repetitionCountStatus.count++;
-        } else {
-          repetitionCountStatus = { playerChip: chip, count: 1 };
-        }
-
-        // If the count for a player is 4, that player won
-        if (repetitionCountStatus.count === 4) {
-          return `Player ${repetitionCountStatus.playerChip} won!`;
-        }
+  
+          const card = chipsPositions[`${row}:${column}`];
+  
+              if(card){
+                  if(chipsPositions[`${row}:${column}`] === playerTurn && chipsPositions[`${row}:${column+1}`] === playerTurn && chipsPositions[`${row}:${column+2}`] === playerTurn && chipsPositions[`${row}:${column+3}`] === playerTurn){
+                      return `Player ${playerTurn} won!`
+                  } 
+              }
+          }
       }
-    }
-
     // Check four in a row vertically
     for (let column = 0; column < columns; column++) {
-      let repetitionCountStatus = { playerChip: "", count: 0 };
 
       for (let row = 0; row < rows; row++) {
-        const chip = chipsPositions[`${row}:${column}`];
 
-        // If there is a chip in that position, and belongs to a player
-        // count that chip for that player (either increase the count or start over)
-        if (chip && chip === repetitionCountStatus.playerChip) {
-          repetitionCountStatus.count++;
-        } else {
-          repetitionCountStatus = { playerChip: chip, count: 1 };
-        }
+        const card = chipsPositions[`${row}:${column}`];
 
-        // If the count for a player is 4, that player won
-        if (repetitionCountStatus.count === 4) {
-          return `Player ${repetitionCountStatus.playerChip} won!`;
-        }
+        if(card){
+          if(chipsPositions[`${row}:${column}`] === playerTurn && chipsPositions[`${row-1}:${column}`] === playerTurn && chipsPositions[`${row-2}:${column}`] === playerTurn && chipsPositions[`${row-3}:${column}`] === playerTurn){
+            return `Player ${playerTurn} won!`
+          } 
+        }       
+      }       
+    }
+    // Check four in a row diagonal-right
+    for (let column = 0; column < columns; column++) {
+
+      for (let row = 0; row < rows; row++) {
+
+        const card = chipsPositions[`${row}:${column}`];
+
+        if(card){
+          if(chipsPositions[`${row}:${column}`] === playerTurn && chipsPositions[`${row+1}:${column-1}`] === playerTurn && chipsPositions[`${row+2}:${column-2}`] === playerTurn && chipsPositions[`${row+3}:${column-3}`] === playerTurn){
+            return `Player ${playerTurn} won!`
+          } 
+        }      
       }
     }
+    // Check four in a row diagonal-left
+    for (let column = 0; column < columns; column++) {
+        
+      for (let row = 0; row < rows; row++) {
 
-    // TODO: Check four in a row diagonally
+        const card = chipsPositions[`${row}:${column}`];
+
+        if(card){
+          if(chipsPositions[`${row}:${column}`] === playerTurn && chipsPositions[`${row-1}:${column-1}`] === playerTurn && chipsPositions[`${row-2}:${column-2}`] === playerTurn && chipsPositions[`${row-3}:${column-3}`] === playerTurn){
+            return `Player ${playerTurn} won!`
+          } 
+        }      
+      }
+    }
 
     return `It's ${playerTurn}'s turn`;
   };
@@ -97,7 +109,7 @@ export default class App extends React.PureComponent<Props, State> {
     const newPlayerTurn = playerTurn === "red" ? "yellow" : "red";
 
     // Calculate game status
-    const gameStatus = this.calculateGameStatus(newPlayerTurn, newChipsPositions);
+    const gameStatus = this.calculateGameStatus(playerTurn, newChipsPositions);
 
     // Save new state
     this.setState({ chipsPositions: newChipsPositions, playerTurn: newPlayerTurn, gameStatus });
