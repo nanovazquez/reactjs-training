@@ -6,7 +6,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
-    "react-scripts-ts": "2.16.0",
+    "react-scripts-ts": "4.0.8",
     "redux": "^4.0.0",
     "redux-actions": "^2.6.1",
     "redux-thunk-promise": "^2.0.1"
